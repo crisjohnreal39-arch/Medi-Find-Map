@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>MediFind</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 20px;
+            background: #ffffff;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 15px;
+        }
+
+        #search {
+            width: 60%;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+
+        #results {
+            padding: 20px;
+        }
+
+        .pharmacy {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <h1>🏥 MediFind</h1>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search for a medicine..."
+    >
+
+    <button onclick="searchMedicine()">
+        Search
+    </button>
+
+</header>
+
+
+<div id="results"></div>
+
+<div id="map"></div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+
+    // -------------------------
+    // MEDIFIND DATABASE
+    // -------------------------
+
+    var pharmacies = [
+
+        {
+            name: "MANG BEN'S PHARMACY",
+            medicine: "Paracetamol",
+            price: 6.50,
+            stock: 25,
+            lat: 14.7566,
+            lng: 120.9942
+        },
+
+        {
+            name: "JOJO'S BOTIKA",
+            medicine: "Paracetamol",
+            price: 7.00,
+            stock: 12,
+            lat: 14.7500,
+            lng: 120.9900
+        },
+
+        {
+            name: "JESSICA'S DRUGSTORE",
+            medicine: "Paracetamol",
+            price: 6.25,
+            stock: 3,
+            lat: 14.7600,
+            lng: 120.9980
+        },
+
+        {
+            name: "MANG BEN'S PHARMACY",
+            medicine: "Cetirizine",
+            price: 8.00,
+            stock: 20,
+            lat: 14.7566,
+            lng: 120.9942
+        }
+
+    ];
+
+
+    // -------------------------
+    // CREATE MAP
+    // -------------------------
+
+    var map = L.map('map').setView(
+        [14.7566, 120.9942],
+        13
+    );
+
+
+    L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            attribution: '&copy; OpenStreetMap contributors'
+        }
+    ).addTo(map);
+
+
+    // Store markers
+    var markers = [];
+
+
+    // -------------------------
+    // SEARCH FUNCTION
+    // -------------------------
+
+    function searchMedicine() {
+
+        var search =
+            document.getElementById("search")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+        // Remove previous markers
+
+        markers.forEach(function(marker) {
+
+            map.removeLayer(marker);
+
+        });
+
+        markers = [];
+
+
+        // Clear results
+
+        document.getElementById("results").innerHTML = "";
+
+
+        // Search database
+
+        var found = pharmacies.filter(function(pharmacy) {
+
+            return pharmacy.medicine
+                .toLowerCase()
+                .includes(search);
+
+        });
+
+
+        // No results
+
+        if (found.length === 0) {
+
+            document.getElementById("results").innerHTML =
+                "<h3>❌ No pharmacies found.</h3>";
+
+            return;
+
+        }
+
+
+        // Display results
+
+        document.getElementById("results").innerHTML =
+            "<h3>Found " + found.length +
+            " pharmacies</h3>";
+
+
+        found.forEach(function(pharmacy) {
+
+
+            // Create result card
+
+            var card =
+                document.createElement("div");
+
+            card.className = "pharmacy";
+
+
+            card.innerHTML =
+
+                "<b>" + pharmacy.name + "</b><br>" +
+
+                "💊 " + pharmacy.medicine + "<br>" +
+
+                "💰 ₱" + pharmacy.price.toFixed(2) + "<br>" +
+
+                "📦 Stock: " + pharmacy.stock;
+
+
+            document
+                .getElementById("results")
+                .appendChild(card);
+
+
+            // Create map marker
+
+            var marker = L.marker([
+
+                pharmacy.lat,
+                pharmacy.lng
+
+            ]).addTo(map);
+
+
+            marker.bindPopup(
+
+                "<b>" + pharmacy.name + "</b><br>" +
+
+                "💊 " + pharmacy.medicine + "<br>" +
+
+                "💰 ₱" +
+                pharmacy.price.toFixed(2) +
+
+                "<br>📦 Stock: " +
+
+                pharmacy.stock
+
+            );
+
+
+            markers.push(marker);
+
+
+        });
+
+    }
+
+</script>
+
+</body>
+
+</html>
