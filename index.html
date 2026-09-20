@@ -3,7 +3,9 @@
 
 <head>
 
-    <title>MediFind</title>
+    <title>Medi-Find</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -13,12 +15,82 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            color: #172033;
+            background: #f5f7fb;
+        }
+
+        #roleChooser {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.72);
+        }
+
+        .role-card {
+            width: min(100%, 520px);
+            box-sizing: border-box;
+            padding: 28px;
+            text-align: center;
+            background: #ffffff;
+            border: 1px solid #dbe3ec;
+            border-radius: 12px;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.2);
+        }
+
+        .role-card h2 {
+            margin: 0 0 8px;
+        }
+
+        .role-card p {
+            margin: 0 0 22px;
+            color: #64748b;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .role-button {
+            min-height: 56px;
+            font-weight: bold;
+        }
+
+        .role-button.pharmacy-role {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #ffffff;
+        }
+
+        #roleChooser[hidden] {
+            display: none;
+        }
+
+        body.user-mode .portal-toggle,
+        body.user-mode #pharmacyPortal {
+            display: none !important;
+        }
+
+        body.pharmacy-mode header,
+        body.pharmacy-mode #results,
+        body.pharmacy-mode #map {
+            display: none;
+        }
+
+        body.pharmacy-mode #pharmacyPortal {
+            display: block;
+            margin-top: 24px;
         }
 
         header {
             padding: 20px;
             background: #ffffff;
             text-align: center;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         h1 {
@@ -29,12 +101,222 @@
             width: 60%;
             padding: 12px;
             font-size: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .display-option {
+            display: block;
+            margin-top: 12px;
+            font-size: 14px;
         }
 
         button {
             padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        .portal-toggle {
+            margin-top: 16px;
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #ffffff;
+        }
+
+        #pharmacyPortal {
+            display: none;
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 24px;
+            background: #ffffff;
+            border: 1px solid #dbe3ec;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        #pharmacyPortal.is-visible {
+            display: block;
+        }
+
+        .portal-auth {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .portal-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .portal-tab.is-active {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #ffffff;
+        }
+
+        .portal-form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .portal-form label {
+            display: grid;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .portal-form input,
+        .portal-form select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            font-size: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        .portal-submit,
+        .portal-logout {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #ffffff;
+        }
+
+        .portal-message {
+            min-height: 20px;
+            margin: 4px 0 0;
+            color: #b42318;
+            font-size: 14px;
+        }
+
+        .portal-message.is-success {
+            color: #0f766e;
+        }
+
+        .portal-dashboard {
+            display: none;
+        }
+
+        .portal-dashboard.is-visible {
+            display: block;
+        }
+
+        .dashboard-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .dashboard-heading h2 {
+            margin: 0 0 6px;
+        }
+
+        .dashboard-heading p,
+        .inventory-meta {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .dashboard-controls {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .dashboard-controls label {
+            display: grid;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .dashboard-controls select,
+        .dashboard-controls input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            font-size: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        #inventoryList {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 10px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding: 2px;
+        }
+
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            background: #f8fafc;
+        }
+
+        .inventory-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .inventory-item small {
+            color: #64748b;
+        }
+
+        .stock-input {
+            width: 82px;
+            padding: 9px;
+            box-sizing: border-box;
+            border: 1px solid #94a3b8;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .dashboard-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        #stockSaveStatus {
+            color: #0f766e;
+            font-size: 14px;
+        }
+
+        .save-stock-btn {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #ffffff;
+        }
+
+        #locationStatus {
+            min-height: 20px;
+            margin: 12px 0 0;
+            color: #555;
+            font-size: 14px;
         }
 
         #map {
@@ -53,12 +335,192 @@
             border-radius: 8px;
         }
 
+        .route-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .route-btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                font-size: 15px;
+            }
+
+            .role-card {
+                padding: 24px 18px;
+            }
+
+            .role-options {
+                grid-template-columns: 1fr;
+            }
+
+            .role-button {
+                width: 100%;
+                min-height: 52px;
+            }
+
+            header {
+                padding: 16px 12px;
+            }
+
+            h1 {
+                font-size: 28px;
+                margin-bottom: 14px;
+            }
+
+            #search {
+                width: 100%;
+                box-sizing: border-box;
+                min-height: 48px;
+                margin-bottom: 8px;
+            }
+
+            header > button {
+                display: block;
+                width: 100%;
+                min-height: 48px;
+                margin: 8px 0 0;
+            }
+
+            .display-option {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                min-height: 44px;
+                margin-top: 8px;
+            }
+
+            .display-option input {
+                width: 20px;
+                height: 20px;
+                margin: 0;
+            }
+
+            .dashboard-heading,
+            .dashboard-footer {
+                display: grid;
+                gap: 12px;
+            }
+
+            .dashboard-heading h2 {
+                font-size: 22px;
+            }
+
+            .dashboard-heading .portal-logout,
+            .dashboard-footer .save-stock-btn {
+                width: 100%;
+                min-height: 48px;
+            }
+
+            .dashboard-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-controls input,
+            .portal-form input,
+            .portal-form select {
+                min-height: 48px;
+                font-size: 16px;
+            }
+
+            #pharmacyPortal {
+                margin: 16px 10px;
+                padding: 16px;
+            }
+
+            #pharmacyPortal h2 {
+                font-size: 22px;
+            }
+
+            .portal-tabs {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .portal-tab,
+            .portal-submit {
+                min-height: 48px;
+                padding: 10px 12px;
+            }
+
+            #inventoryList {
+                grid-template-columns: 1fr;
+                max-height: none;
+            }
+
+            .inventory-item {
+                min-height: 64px;
+                padding: 12px 10px;
+            }
+
+            .inventory-item strong {
+                overflow-wrap: anywhere;
+            }
+
+            .stock-input {
+                flex: 0 0 82px;
+                min-height: 48px;
+            }
+
+            #stockSaveStatus,
+            .inventory-meta,
+            #locationStatus {
+                line-height: 1.45;
+            }
+
+            #results {
+                padding: 14px 12px;
+            }
+
+            #results h3 {
+                margin-top: 4px;
+                font-size: 18px;
+            }
+
+            .pharmacy {
+                padding: 13px;
+                line-height: 1.45;
+            }
+
+            .route-btn {
+                width: 100%;
+                min-height: 46px;
+                font-size: 15px;
+            }
+
+            #map {
+                height: 52vh;
+                min-height: 360px;
+                max-height: 520px;
+            }
+        }
+
     </style>
 
 </head>
 
 <body>
 
+<section id="roleChooser" aria-labelledby="roleTitle">
+    <div class="role-card">
+        <h2 id="roleTitle">Welcome to MediFind</h2>
+        <p>Choose how you want to use the map.</p>
+        <div class="role-options">
+            <button type="button" class="role-button" onclick="chooseRole('user')">I am a user</button>
+            <button type="button" class="role-button pharmacy-role" onclick="chooseRole('pharmacy')">I am a pharmacy</button>
+        </div>
+    </div>
+</section>
 
 <header>
 
@@ -74,16 +536,76 @@
         Search
     </button>
 
+    <button type="button" onclick="locateUser()">
+        Use my location
+    </button>
+
+    <p id="locationStatus" role="status">Location is not being tracked.</p>
+
+    <label class="display-option">
+        <input type="checkbox" id="showDetails" checked onchange="searchMedicine()">
+        Show brand and dosage
+    </label>
+
+    <button type="button" class="portal-toggle" onclick="togglePharmacyPortal()">
+        Pharmacy portal
+    </button>
+
 </header>
+
+<section id="pharmacyPortal" aria-labelledby="portalTitle">
+    <div id="portalAuth" class="portal-auth">
+        <h2 id="portalTitle">Pharmacy portal</h2>
+        <p class="inventory-meta">Create an account for your pharmacy or log in to update its public stock.</p>
+        <div class="portal-tabs" role="tablist">
+            <button type="button" class="portal-tab is-active" id="loginTab" onclick="showPortalForm('login')">Log in</button>
+            <button type="button" class="portal-tab" id="registerTab" onclick="showPortalForm('register')">Create account</button>
+        </div>
+
+        <form id="loginForm" class="portal-form" onsubmit="loginPharmacy(event)">
+            <label>Email address<input type="email" id="loginEmail" required autocomplete="email"></label>
+            <label>Password<input type="password" id="loginPassword" required autocomplete="current-password"></label>
+            <button type="submit" class="portal-submit">Log in to stock manager</button>
+        </form>
+
+        <form id="registerForm" class="portal-form" onsubmit="portalRegisterAccount(event)" hidden>
+            <label>Pharmacy<select id="registerPharmacy" required></select></label>
+            <label>Email address<input type="email" id="registerEmail" required autocomplete="email"></label>
+            <label>Password<input type="password" id="registerPassword" minlength="6" required autocomplete="new-password"></label>
+            <button type="submit" class="portal-submit">Create pharmacy account</button>
+        </form>
+        <p id="portalMessage" class="portal-message" role="status"></p>
+    </div>
+
+    <div id="portalDashboard" class="portal-dashboard" aria-labelledby="dashboardTitle">
+        <div class="dashboard-heading">
+            <div>
+                <h2 id="dashboardTitle">Update pharmacy stock</h2>
+                <p id="loggedInPharmacy" class="inventory-meta"></p>
+            </div>
+            <button type="button" class="portal-logout" onclick="logoutPharmacy()">Log out</button>
+        </div>
+        <div class="dashboard-controls">
+            <label>
+                Find a product
+                <input type="search" id="inventorySearch" placeholder="Search inventory..." oninput="renderInventory()">
+            </label>
+            <p class="inventory-meta" id="inventoryCount" aria-live="polite"></p>
+        </div>
+        <div id="inventoryList"></div>
+        <div class="dashboard-footer">
+            <span id="stockSaveStatus" role="status"></span>
+            <button type="button" class="save-stock-btn" onclick="saveStockUpdates()">Save stock updates</button>
+        </div>
+    </div>
+</section>
 
 
 <div id="results"></div>
 
 <div id="map"></div>
 
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 
 <script>
 
@@ -100,22 +622,124 @@
             stock: 25,
             lat: 14.7566,
             lng: 120.9942
+
+        },
+
+        {
+            name: "MANG BEN'S PHARMACY",
+            medicine: "Decolgen Forte",
+            price: 8.50,
+            stock: 25,
+            lat: 14.7566,
+            lng: 120.9942
+
+        },
+
+        {
+            name: "MANG BEN'S PHARMACY",
+            medicine: "Ibuprofen",
+            price: 6.50,
+            stock: 25,
+            lat: 14.7566,
+            lng: 120.9942
+        },
+
+        {
+            name: "MANG BEN'S PHARMACY",
+            medicine: "Bisacodyl",
+            price: 30.70,
+            stock: 20,
+            lat: 14.7566,
+            lng: 120.9942
+        },
+
+        {
+            name: "MANG BEN'S PHARMACY",
+            medicine: "Guaifenesin",
+            price: 12.70,
+            stock: 50,
+            lat: 14.7566,
+            lng: 120.9942
         },
 
         {
             name: "JOJO'S BOTIKA",
-            medicine: "Paracetamol",
-            price: 7.00,
-            stock: 12,
+            medicine: "Ibuprofen",
+            price: 6.00,
+            stock: 30,
             lat: 14.7500,
             lng: 120.9900
         },
 
         {
+            name: "JOJO'S BOTIKA",
+            medicine: "Lagundi",
+            price: 6.00,
+            stock: 30,
+            lat: 14.7500,
+            lng: 120.9900
+        },
+
+        {
+            name: "JOJO'S BOTIKA",
+            medicine: "Solmux",
+            price: 14.50,
+            stock: 10,
+            lat: 14.7500,
+            lng: 120.9900
+        },
+
+        {
+
+            name: "JOJO'S BOTIKA",
+            medicine: "Plemex Forte",
+            price: 8.50,
+            stock: 10,
+            lat: 14.7500,
+            lng: 120.9900
+        },
+    
+        {
+            name: "JESSICA'S DRUGSTORE",
+            medicine: "NovaFlora",
+            price: 22.15,
+            stock: 30,
+            lat: 14.7600,
+            lng: 120.9980
+        },
+
+        {
+            name: "JESSICA'S DRUGSTORE",
+            medicine: "Ibuprofen",
+            price: 7.00,
+            stock: 15,
+            lat: 14.7600,
+            lng: 120.9980
+        },
+
+        {
+            name: "JESSICA'S DRUGSTORE",
+            medicine: "Biogesic",
+            price: 4.95,
+            stock: 19,
+            lat: 14.7600,
+            lng: 120.9980
+        },
+
+        {
+            name: "JESSICA'S DRUGSTORE",
+            medicine: "Tuseran Forte",
+            price: 12.50,
+            stock: 23,
+            lat: 14.7600,
+            lng: 120.9980
+        },
+
+        {
             name: "JESSICA'S DRUGSTORE",
             medicine: "Paracetamol",
-            price: 6.25,
-            stock: 3,
+            price: 7.50,
+            stock: 37,
             lat: 14.7600,
             lng: 120.9980
         },
@@ -131,6 +755,459 @@
 
     ];
 
+    var medicineDetails = {
+        "Paracetamol": { brand: "Biogesic", dosage: "500 mg tablet" },
+        "Decolgen Forte": { brand: "Decolgen Forte", dosage: "500 mg / 2 mg / 5 mg tablet" },
+        "Ibuprofen": { brand: "Medicol", dosage: "200 mg capsule" },
+        "Bisacodyl": { brand: "Dulcolax", dosage: "5 mg tablet" },
+        "Guaifenesin": { brand: "Robitussin", dosage: "100 mg / 5 mL syrup" },
+        "Lagundi": { brand: "Ascof", dosage: "600 mg tablet" },
+        "Solmux": { brand: "Solmux", dosage: "500 mg capsule" },
+        "Plemex Forte": { brand: "Plemex Forte", dosage: "500 mg / 25 mg tablet" },
+        "NovaFlora": { brand: "NovaFlora", dosage: "10 billion CFU capsule" },
+        "Biogesic": { brand: "Biogesic", dosage: "500 mg tablet" },
+        "Tuseran Forte": { brand: "Tuseran Forte", dosage: "500 mg / 30 mg / 2 mg capsule" },
+        "Cetirizine": { brand: "Allerkast", dosage: "10 mg tablet" }
+    };
+
+    var medicineDescriptions = {
+        "Paracetamol": "Relieves mild-to-moderate fever and headache when taken as directed.",
+        "Decolgen Forte": "Common OTC remedy for clogged nose, sinus pressure, and headaches caused by colds or flu.",
+        "Ibuprofen": "NSAID used to relieve pain, inflammation, headaches, toothaches, and muscle pain.",
+        "Bisacodyl": "Laxative used for short-term relief of occasional constipation.",
+        "Guaifenesin": "Expectorant that helps loosen phlegm and make coughs more productive.",
+        "Lagundi": "Herbal medicine traditionally used to help relieve cough.",
+        "Solmux": "Mucolytic designed to break down thick phlegm, making coughs more productive and easier to expel.",
+        "Plemex Forte": "Combination medicine used for relief of cough and cold symptoms.",
+        "NovaFlora": "Probiotic supplement that supports healthy digestion and intestinal flora.",
+        "Biogesic": "Widely used for relief of mild-to-moderate fever and headaches; safe for most age groups when taken as directed.",
+        "Tuseran Forte": "Formulated to treat cough, cold symptoms, and headache discomfort.",
+        "Cetirizine": "Antihistamine used to relieve allergy symptoms such as sneezing, itching, and runny nose."
+    };
+
+    var additionalSupplyProducts = [
+        { name: "SIMPLEX Disposable Syringe 50cc/ml", price: 37.50, description: "Sterile, single-use, large-capacity medical device distributed by pNamed Philippines." },
+        { name: "SURE GUARD Sterile Latex Gloves Size 6", price: 7.00, description: "Medical-grade powder free latex gloves engineered for maximum protection, precision, and comfort during surgical procedures." },
+        { name: "Henso Stool Container 60ml tall type", price: 25.00, description: "Stool Container 60ml tall type, is made from PP material, with screw cap and spoon, mainly apply for Stool collection" },
+        { name: "MEDIPLAST Sterile Gauze Pads", price: 7.00, description: "For dressing cuts, scratches, and burns." },
+        { name: "Cleene Cotton Balls 50pcs", price: 23.00, description: "Made with 100% pure and natural cotton. Excellent softness and absorption. Hydrogen peroxide-bleached that is not harmful to the skin." },
+        { name: "Medicare Antiseptic Plastic Strips 100pcs", price: 35.00, description: "Breathable, non-stick bandages for minor cuts & scrapes. Soft, flexible material keeps dirt out." },
+        { name: "SURE-GUARD Elastic Bandage 10cm x 5cm", price: 65.00, description: "High quality elastic bandage with woven edges Made of cotton twains." },
+        { name: "CARESS Adult Diaper Medium 10 Pads", price: 199.00, description: "Caress Basic Medium 10s for light to moderate incontinence" },
+        { name: "Bactigras Dressing 10cm x 10cm", price: 75.00, description: "It protects wounds, prevents infection, and allows fluid to drain into a secondary pad." },
+        { name: "PARTNERS Anti-Bedsore Mattress with Pump", price: 2500.00, description: "Basic therapeutic mattress support is good for pressure ulcer therapy. Thus, this unit includes an adjustable pump that allows for individual caregiver comfort setting." },
+        { name: "MC Lance Sterile Blood Lancet 200 pcs", price: 400.00, description: "Fine gauge, tri-bevel tip for virtually painless sampling. Consistent depth penetration. Universal design fits almost all lancing devices." },
+        { name: "MC Lance Sterile Blood Lancet 100 pcs", price: 150.00, description: "Fine gauge, tri-bevel tip for virtually painless sampling. Consistent depth penetration. Universal design fits almost all lancing devices." },
+        { name: "Cohesive Sports Bandage", price: 72.00, description: "The Cohesive Sports Bandage is a strong, breathable, self-gripping athletic tape designed to provide support and prevent injury during physical activity." },
+        { name: "PARTNERS Colostomy Bag 6x70mm", price: 175.00, description: "A popular, budget-friendly brand of drainable colostomy and ostomy bags available in the Philippines." },
+        { name: "CPR Pocket Mask", price: 210.00, description: "Portable barrier device used during rescue breathing to protect the rescuer from bodily fluids." },
+        { name: "Mediplast Emergency Kit", price: 599.00, description: "Contains basic items needed in an emergency. Every household should have at least one kit that can be used in case of calamities like earthquakes and typhoons." },
+        { name: "INDOPLAS Gauze Pad 4x4x8 Sterile", price: 196.00, description: "If you get a bad burn, a doctor might clean it and cover it with gauze. In medicine, gauze has several uses. Sterile gauze is usually kept in a sealed package, to ensure that it’s perfectly clean." },
+        { name: "ADVAN BG-707 Glucose Meter", price: 515.00, description: "A portable blood glucose monitoring device used to measure blood sugar levels quickly and accurately. It is designed for both home use and clinical settings, especially for individuals managing diabetes." },
+        { name: "ADVAN BS-602 Blood Glucose Test Strips 26 pcs", price: 392.00, description: "The ADVAN BS-602 Glucose Strips are specially designed for use with ADVAN BG-707 and BG-709 blood glucose meters - helping you monitor your blood sugar levels easily at home or on-the-go." },
+        { name: "Medicare Reusable Hot and Cold Pack 28cm x 13cm", price: 55.00, description: "Reusable therapeutic pack designed for hot and cold treatment to help relieve pain, reduce swelling, and relax sore muscles. It is commonly used in hospitals, clinics, sports medicine, rehabilitation, and home care." },
+        { name: "S.S.AXON V-185 Hearing Aid", price: 497.00, description: "Budget-friendly, over-the-counter sound amplification devices." },
+        { name: "BeHealthy Portable Nebulizer for Kids and Adults", price: 899.00, description: "Compatible with standard nebulizable medications including salbutamol and budesonide - always use medications as prescribed by your doctor." },
+        { name: "INMED Ice Bag 6", price: 121.00, description: "Provides the right size to cover a decent size area for relieving swelling or muscular pain" },
+        { name: "KOOL FEVER Adult Patch 2 pcs", price: 55.00, description: "For 12 years old and above. Absorbs and disperses heat effectively when having a fever. Can also be used for headache, toothache, sprains and bruises, hot days and flushed skin after sports." },
+        { name: "Unimex Lubricating Jelly 1 pcs", price: 4.50, priceLabel: "₱4.50 - ₱6.40", description: "A water-soluble, greaseless medical lubricant used to ease the insertion of medical instruments like catheters, endoscopes, and vaginal speculums." },
+        { name: "Measuring/Medicine Cup 30 mL (Plastic) 1 pcs", price: 5.00, description: "Made from durable, translucent polypropylene plastic, this cup is perfect for safe, accurate, and hygienic medication handling." },
+        { name: "Transfer Pipettes (Plastic) 1 pcs", price: 6.00, description: "Laboratory tool used to measure, transport, and dispense exact volumes of liquid." },
+        { name: "Happy Cotton Buds 200 Tips", price: 20.00, description: "Soft, durable, and designed for everyday hygiene." },
+        { name: "Surgical Basics Triangular Bandage", price: 45.00, description: "A versatile piece of cloth shaped like a right-angled triangle." },
+        { name: "Top Care Breast Pump", price: 68.00, description: "A simple, hand-operated medical and baby care device used by nursing mothers to express breast milk, relieve painful milk engorgement, and ease overly full breasts." },
+        { name: "Diagnostic Vessel", price: 120.00, description: "Used for collecting and handling diagnostic samples during medical testing and examination." },
+        { name: "Simplex Syringe", price: 40.00, description: "Single-use medical syringe designed for safe and precise medication delivery or fluid extraction." },
+        { name: "Breast Reliever", price: 75.00, description: "Comfort aid for nursing mothers to ease breast discomfort and improve milk flow." },
+        { name: "Skin-Flex Band-Aid", price: 29.00, description: "Flexible adhesive bandage for minor cuts, scratches, and skin protection." },
+        { name: "Latex Surgical Gloves", price: 55.00, description: "Protective disposable gloves used in clinical and surgical procedures for hygiene and safety." },
+        { name: "Medical Air Mattress Wish Pump", price: 2850.00, description: "Air pump for inflatable medical mattresses that helps reduce pressure sores and improve patient comfort." },
+        { name: "Elastic Bandages", price: 48.00, description: "Stretchable bandage for compression, support, and stabilization of sprains and injuries." },
+        { name: "Caress", price: 199.00, description: "Adult care product designed for comfort and hygiene for daily use." },
+        { name: "MC Lance", price: 150.00, description: "Sterile blood lancet used for quick and minimally painful blood sampling." },
+        { name: "Clinical Monitoring", price: 390.00, description: "Medical monitoring equipment used to track vital signs and observe patient health status." }
+    ];
+
+    var additionalMedicineProducts = [
+        { name: "Biogesic (Paracetamol)", price: 5.50, description: "Widely used for mild-to-moderate fever and headaches; take as directed." },
+        { name: "Chlorphenamine Maleate", price: 3.00, description: "Formulated to relieve multi-symptom colds, targeting runny nose, nasal congestion, and body aches." },
+        { name: "Medicol Advance (Ibuprofen)", price: 7.50, description: "Non-steroidal anti-inflammatory drug (NSAID) used for severe headaches, toothaches, dysmenorrhea, and muscle pain." },
+        { name: "Alaxan", price: 8.50, description: "Dual-action pain reliever specifically targeted at severe muscle aches, body pain, and joint soreness." },
+        { name: "Kremil-S", price: 9.50, description: "Antacid tablet used for fast relief from hyperacidity, stomach upset, acid reflux, and gas pain." },
+        { name: "Buscopan Venus", price: 26.00, description: "Targeted relief for painful abdominal cramps, particularly during menstrual periods or stomach spasms." },
+        { name: "Diatabs", price: 9.00, description: "Popular anti-diarrheal medication used to slow down gut motility and manage acute diarrhea." },
+        { name: "Sarimax", price: 45.00, description: "Prescription antihistamine used for severe allergic skin conditions, intense itching, or short-term relief of anxiety." },
+        { name: "Sedazine", price: 26.00, priceLabel: "₱26.00 - ₱29.25", description: "Medication that blocks histamine receptors and calms down activity in the central nervous system." },
+        { name: "Bioflu", price: 9.75, description: "Comprehensive medication formulated to treat full-blown flu symptoms including fever, body pains, and congestion." },
+        { name: "Celebrex", price: 52.00, description: "Prescription NSAID (COX-2 inhibitor) commonly prescribed for joint pain, severe inflammation, and arthritis symptoms." },
+        { name: "Heragest", price: 80.00, description: "Prescription hormonal medication widely used in the Philippines for supporting pregnancy, progesterone deficiency, and regulating menstrual cycles." },
+        { name: "Neozep Forte", price: 9.25, description: "Highly popular over-the-counter (OTC) medication used for the fast relief of clogged nose, runny nose, sneezing, and accompanying headache or fever from colds." },
+        { name: "Bonamine", price: 18.50, description: "Chewable OTC tablet widely used to prevent and treat motion sickness, dizziness, nausea, and vomiting during travel." },
+        { name: "Ponstan", price: 42.00, description: "Widely used prescription/OTC NSAID targeted at relieving mild-to-moderate body pain, particularly effective for severe toothaches and menstrual cramps." },
+        { name: "Gaviscon", price: 36.00, description: "Common antacid and alginate remedy that forms a protective barrier to rapidly soothe heartburn and acid indigestion." },
+        { name: "Sinecod Forte", price: 14.00, description: "Effective non-drowsy formulation used as a cough suppressant for dry, irritating, and non-productive coughs." },
+        { name: "Neurobion Forte", price: 57.00, priceLabel: "₱57.00 - ₱59.00", description: "Vitamin B-complex supplement used to treat vitamin B deficiencies and relieve nerve symptoms like tingling, numbness, and weakness." },
+        { name: "Paracetamol", price: 6.50, description: "Pain and fever relief for everyday headaches, body aches, and fever symptoms." },
+        { name: "Neurobion", price: 58.00, description: "Vitamin B-complex supplement that supports nerve health and energy metabolism." },
+        { name: "Gaviscon", price: 36.00, description: "Antacid and alginate for relief from heartburn, indigestion, and acid reflux." },
+        { name: "Celebrex", price: 52.00, description: "Prescription anti-inflammatory medicine for joint and arthritis pain relief." },
+        { name: "Bonamine", price: 18.50, description: "Motion sickness and nausea relief for travel and dizziness." },
+        { name: "Kremil - S", price: 10.00, description: "Antacid tablet for upset stomach, acidity, and indigestion." },
+        { name: "Diatabs", price: 9.00, description: "For diarrhea control and gastrointestinal comfort." },
+        { name: "Ibufropen", price: 8.00, description: "Pain reliever for headaches, fever, toothaches, and muscle aches." },
+        { name: "Neozep", price: 9.25, description: "Cold and flu medicine for congestion, cough, and fever symptoms." },
+        { name: "Bioflu", price: 9.75, description: "Flu treatment for fever, body aches, runny nose, and congestion." },
+        { name: "Sedazine", price: 26.00, description: "Antihistamine used for allergy and symptom relief." },
+        { name: "Symdex", price: 12.00, description: "Medication for cold and cough-related discomfort." },
+        { name: "Riphen", price: 15.00, description: "For relief from cold symptoms including fever, sneezing, and body pain." },
+        { name: "Alaxan FR", price: 8.50, description: "Fast pain relief for muscle aches, back pain, and body pains." },
+        { name: "Decolgen", price: 8.00, description: "Cold and flu medication for congestion, headache, and nasal discomfort." },
+        { name: "Progesterone", price: 75.00, description: "Hormone supplement used under medical supervision for reproductive health support." },
+        { name: "Sarimax", price: 45.00, description: "Medication for allergy-related itching and inflammation relief." },
+        { name: "Ponstan", price: 42.00, description: "NSAID used for cramps, body pain, and severe discomfort." },
+        { name: "Solmux", price: 14.50, description: "Mucolytic used to loosen phlegm and ease coughing." },
+        { name: "Buscopan", price: 26.00, description: "For abdominal cramps and stomach discomfort." },
+        { name: "Vitamin A", price: 24.00, description: "Essential vitamin for eye health, immunity, and skin maintenance." },
+        { name: "Niacin", price: 21.00, description: "Vitamin B3 supplement for energy metabolism and healthy circulation." },
+        { name: "Biotin", price: 26.00, description: "Supports healthy hair, skin, and nails as part of daily wellness." },
+        { name: "Benfotiamine", price: 34.00, description: "Thiamine derivative supplement often used to support nerve health." },
+        { name: "Pantothenic Acid", price: 22.00, description: "Vitamin B5 support for energy conversion and metabolism." },
+        { name: "Folate", price: 20.00, description: "B-vitamin used to support cell growth and healthy red blood cells." },
+        { name: "Riboflavin", price: 18.00, description: "Vitamin B2 supplement for energy production and skin health." },
+        { name: "Pyridoxine", price: 19.00, description: "Vitamin B6 supplement supporting metabolism and nervous system function." },
+        { name: "Swanson C", price: 25.00, description: "Vitamin C supplement to support immunity and daily wellness." }
+    ];
+
+    var pharmacyLocations = {
+        "MANG BEN'S PHARMACY": {
+            address: "1344 RA Reyes St. Tondo Manila",
+            lat: 14.6119967,
+            lng: 120.9704920
+        },
+        "JOJO'S BOTIKA": {
+            address: "1677 Maceda St Sampaloc Manila",
+            lat: 14.6135952,
+            lng: 120.9988148
+        },
+        "JESSICA'S DRUGSTORE": {
+            address: "1866 Calamba St, 500 Zone 49, Manila, 1008 Metro Manila",
+            lat: 14.6227144,
+            lng: 120.9917418
+        }
+    };
+
+    var pharmacyNames = Object.keys(pharmacyLocations);
+
+    pharmacies.forEach(function(pharmacy) {
+        var location = pharmacyLocations[pharmacy.name];
+
+        if (location) {
+            pharmacy.address = location.address;
+            pharmacy.lat = location.lat;
+            pharmacy.lng = location.lng;
+        }
+    });
+
+    function productIdentity(medicine) {
+        var normalized = normalizeSearchText(medicine);
+
+        if (normalized.includes("paracetamol") || normalized.includes("biogesic")) {
+            return "paracetamol";
+        }
+
+        if (normalized.includes("ibuprofen") || normalized.includes("medicol")) {
+            return "ibuprofen";
+        }
+
+        return normalized;
+    }
+
+    function deduplicateProducts() {
+        var uniqueProducts = {};
+
+        pharmacies.forEach(function(pharmacy) {
+            var productKey = normalizeSearchText(pharmacy.name) + "|" + productIdentity(pharmacy.medicine);
+            var current = uniqueProducts[productKey];
+
+            if (!current) {
+                uniqueProducts[productKey] = pharmacy;
+                return;
+            }
+
+            if ((pharmacy.price || 0) < (current.price || Infinity)) {
+                uniqueProducts[productKey] = pharmacy;
+            }
+        });
+
+        pharmacies = Object.keys(uniqueProducts).map(function(productKey) {
+            return uniqueProducts[productKey];
+        });
+    }
+
+    function addProductsToAllPharmacies(products) {
+        pharmacyNames.forEach(function(pharmacyName) {
+            var location = pharmacyLocations[pharmacyName];
+
+            products.forEach(function(product) {
+                pharmacies.push({
+                    name: pharmacyName,
+                    medicine: product.name,
+                    price: product.price,
+                    priceLabel: product.priceLabel,
+                    stock: "Available",
+                    description: product.description,
+                    address: location.address,
+                    lat: location.lat,
+                    lng: location.lng
+                });
+            });
+        });
+    }
+
+    addProductsToAllPharmacies(additionalSupplyProducts);
+    addProductsToAllPharmacies(additionalMedicineProducts);
+    deduplicateProducts();
+
+    var stockStorageKey = "medifind-stock-updates";
+    var pendingStockUpdates = {};
+
+    try {
+        pendingStockUpdates = JSON.parse(localStorage.getItem(stockStorageKey) || "{}");
+    } catch (error) {
+        pendingStockUpdates = {};
+    }
+
+    pharmacies.forEach(function(pharmacy, index) {
+        var savedStock = pendingStockUpdates[index];
+
+        if (savedStock !== undefined) {
+            pharmacy.stock = savedStock;
+        }
+    });
+
+    var accountStorageKey = "medifind-pharmacy-accounts";
+    var sessionStorageKey = "medifind-pharmacy-session";
+    var currentPharmacyAccount = null;
+
+    function getPharmacyAccounts() {
+        try {
+            return JSON.parse(localStorage.getItem(accountStorageKey) || "[]");
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function savePharmacyAccounts(accounts) {
+        localStorage.setItem(accountStorageKey, JSON.stringify(accounts));
+    }
+
+    function setPortalMessage(message, isSuccess) {
+        var portalMessage = document.getElementById("portalMessage");
+        portalMessage.textContent = message;
+        portalMessage.classList.toggle("is-success", Boolean(isSuccess));
+    }
+
+    function populateRegistrationPharmacies() {
+        var pharmacySelect = document.getElementById("registerPharmacy");
+
+        if (pharmacySelect.options.length) {
+            return;
+        }
+
+        pharmacyNames.forEach(function(pharmacyName) {
+            var option = document.createElement("option");
+            option.value = pharmacyName;
+            option.textContent = pharmacyName;
+            pharmacySelect.appendChild(option);
+        });
+    }
+
+    function chooseRole(role) {
+        document.body.classList.remove("user-mode", "pharmacy-mode");
+        document.body.classList.add(role === "pharmacy" ? "pharmacy-mode" : "user-mode");
+        document.getElementById("roleChooser").hidden = true;
+
+        if (role === "pharmacy") {
+            var portal = document.getElementById("pharmacyPortal");
+            portal.classList.add("is-visible");
+            populateRegistrationPharmacies();
+            restorePharmacySession();
+        }
+    }
+
+    function togglePharmacyPortal() {
+        var portal = document.getElementById("pharmacyPortal");
+        var shouldShow = !portal.classList.contains("is-visible");
+
+        portal.classList.toggle("is-visible", shouldShow);
+
+        if (shouldShow) {
+            populateRegistrationPharmacies();
+            restorePharmacySession();
+        }
+    }
+
+    function showPortalForm(formName) {
+        var isLogin = formName === "login";
+
+        document.getElementById("loginForm").hidden = !isLogin;
+        document.getElementById("registerForm").hidden = isLogin;
+        document.getElementById("loginTab").classList.toggle("is-active", isLogin);
+        document.getElementById("registerTab").classList.toggle("is-active", !isLogin);
+        setPortalMessage("", false);
+    }
+
+    function portalRegisterAccount(event) {
+        event.preventDefault();
+
+        var pharmacyName = document.getElementById("registerPharmacy").value;
+        var email = document.getElementById("registerEmail").value.trim().toLowerCase();
+        var password = document.getElementById("registerPassword").value;
+        var accounts = getPharmacyAccounts();
+
+        if (accounts.some(function(account) { return account.email === email; })) {
+            setPortalMessage("An account with this email already exists.", false);
+            return;
+        }
+
+        if (accounts.some(function(account) { return account.pharmacyName === pharmacyName; })) {
+            setPortalMessage("This pharmacy already has an account. Please log in.", false);
+            return;
+        }
+
+        accounts.push({ pharmacyName: pharmacyName, email: email, password: password });
+        savePharmacyAccounts(accounts);
+        document.getElementById("registerForm").reset();
+        showPortalForm("login");
+        document.getElementById("loginEmail").value = email;
+        setPortalMessage("Account created. Log in to manage " + pharmacyName + " stock.", true);
+    }
+
+    function loginPharmacy(event) {
+        event.preventDefault();
+
+        var email = document.getElementById("loginEmail").value.trim().toLowerCase();
+        var password = document.getElementById("loginPassword").value;
+        var account = getPharmacyAccounts().find(function(savedAccount) {
+            return savedAccount.email === email && savedAccount.password === password;
+        });
+
+        if (!account) {
+            setPortalMessage("Email or password is incorrect.", false);
+            return;
+        }
+
+        currentPharmacyAccount = account;
+        localStorage.setItem(sessionStorageKey, email);
+        showPortalDashboard();
+    }
+
+    function restorePharmacySession() {
+        var sessionEmail = localStorage.getItem(sessionStorageKey);
+        var account = getPharmacyAccounts().find(function(savedAccount) {
+            return savedAccount.email === sessionEmail;
+        });
+
+        if (account) {
+            currentPharmacyAccount = account;
+            showPortalDashboard();
+        } else {
+            currentPharmacyAccount = null;
+            document.getElementById("portalAuth").style.display = "block";
+            document.getElementById("portalDashboard").classList.remove("is-visible");
+        }
+    }
+
+    function showPortalDashboard() {
+        document.getElementById("portalAuth").style.display = "none";
+        document.getElementById("portalDashboard").classList.add("is-visible");
+        document.getElementById("loggedInPharmacy").textContent =
+            currentPharmacyAccount.pharmacyName + " | " + currentPharmacyAccount.email;
+        document.getElementById("inventorySearch").value = "";
+        renderInventory();
+    }
+
+    function logoutPharmacy() {
+        currentPharmacyAccount = null;
+        localStorage.removeItem(sessionStorageKey);
+        document.getElementById("portalDashboard").classList.remove("is-visible");
+        document.getElementById("portalAuth").style.display = "block";
+        document.getElementById("loginForm").reset();
+        showPortalForm("login");
+    }
+
+    function renderInventory() {
+        if (!currentPharmacyAccount) {
+            return;
+        }
+
+        var selectedPharmacy = currentPharmacyAccount.pharmacyName;
+        var searchText = normalizeSearchText(document.getElementById("inventorySearch").value);
+        var inventory = pharmacies.filter(function(pharmacy) {
+            return pharmacy.name === selectedPharmacy &&
+                (!searchText || normalizeSearchText(pharmacy.medicine).includes(searchText));
+        });
+        var inventoryList = document.getElementById("inventoryList");
+
+        inventoryList.innerHTML = "";
+        document.getElementById("inventoryCount").textContent = inventory.length + " product" +
+            (inventory.length === 1 ? "" : "s") + " shown";
+
+        if (!inventory.length) {
+            inventoryList.innerHTML = "<p>No products match this search.</p>";
+            return;
+        }
+
+        inventory.forEach(function(pharmacy) {
+            var pharmacyIndex = pharmacies.indexOf(pharmacy);
+            var item = document.createElement("div");
+            item.className = "inventory-item";
+
+            var productDetails = document.createElement("div");
+            productDetails.innerHTML = "<strong>" + pharmacy.medicine + "</strong>" +
+                "<small>Price: " + (pharmacy.priceLabel || "₱" + pharmacy.price.toFixed(2)) + "</small>";
+
+            var stockInput = document.createElement("input");
+            stockInput.className = "stock-input";
+            stockInput.type = "number";
+            stockInput.min = "0";
+            stockInput.step = "1";
+            stockInput.value = Number.isFinite(Number(pharmacy.stock)) ? pharmacy.stock : 0;
+            stockInput.setAttribute("aria-label", "Stock for " + pharmacy.medicine);
+            stockInput.dataset.pharmacyIndex = pharmacyIndex;
+
+            item.appendChild(productDetails);
+            item.appendChild(stockInput);
+            inventoryList.appendChild(item);
+        });
+    }
+
+    function saveStockUpdates() {
+        var stockInputs = document.querySelectorAll(".stock-input");
+        var selectedPharmacy = currentPharmacyAccount.pharmacyName;
+        var updatedCount = 0;
+
+        stockInputs.forEach(function(input) {
+            var stockValue = Math.max(0, Math.floor(Number(input.value)));
+            var pharmacyIndex = Number(input.dataset.pharmacyIndex);
+
+            if (!Number.isFinite(stockValue)) {
+                stockValue = 0;
+            }
+
+            pharmacies[pharmacyIndex].stock = stockValue;
+            pendingStockUpdates[pharmacyIndex] = stockValue;
+            input.value = stockValue;
+            updatedCount++;
+        });
+
+        localStorage.setItem(stockStorageKey, JSON.stringify(pendingStockUpdates));
+        document.getElementById("stockSaveStatus").textContent =
+            updatedCount + " stock " + (updatedCount === 1 ? "item" : "items") +
+            " saved for " + selectedPharmacy + ".";
+        searchMedicine();
+    }
+
 
     // -------------------------
     // CREATE MAP
@@ -143,20 +1220,244 @@
 
 
     L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
         {
-            attribution: '&copy; OpenStreetMap contributors'
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
         }
     ).addTo(map);
+
+    var routeLayer = null;
+    var pendingRoutePharmacy = null;
+
+    function clearRoute() {
+        if (routeLayer) {
+            map.removeLayer(routeLayer);
+            routeLayer = null;
+        }
+    }
+
+    function routeToPharmacy(pharmacy) {
+        if (!userLocation) {
+            pendingRoutePharmacy = pharmacy;
+            document.getElementById("locationStatus").textContent =
+                "Enable your location to see directions on the map.";
+            locateUser();
+            return;
+        }
+
+        clearRoute();
+
+        document.getElementById("locationStatus").textContent =
+            "Loading road directions to " + pharmacy.name + "...";
+
+        var routeUrl = "https://router.project-osrm.org/route/v1/driving/" +
+            userLocation.lng + "," + userLocation.lat + ";" +
+            pharmacy.lng + "," + pharmacy.lat +
+            "?overview=full&geometries=geojson&steps=true";
+
+        fetch(routeUrl)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error("Routing request failed");
+                }
+
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.code !== "Ok" || !data.routes || !data.routes.length) {
+                    throw new Error("No route found");
+                }
+
+                var route = data.routes[0];
+                routeLayer = L.geoJSON(route.geometry, {
+                    style: {
+                        color: "#2563eb",
+                        opacity: 0.9,
+                        weight: 6
+                    }
+                }).addTo(map);
+
+                map.fitBounds(routeLayer.getBounds(), { padding: [30, 30] });
+
+                document.getElementById("locationStatus").textContent =
+                    "Road directions ready: " + (route.distance / 1000).toFixed(1) +
+                    " km, about " + Math.round(route.duration / 60) +
+                    " minutes to " + pharmacy.name + ".";
+            })
+            .catch(function() {
+                document.getElementById("locationStatus").textContent =
+                    "Road directions could not be loaded. Please try again.";
+            });
+    }
+
+    window.routeToPharmacy = routeToPharmacy;
 
 
     // Store markers
     var markers = [];
+    var userMarker = null;
+    var userAccuracyCircle = null;
+    var userLocation = null;
+    var userWatchId = null;
 
 
     // -------------------------
     // SEARCH FUNCTION
     // -------------------------
+
+    function normalizeSearchText(text) {
+        return text.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+    }
+
+    function levenshteinDistance(firstText, secondText) {
+        var previousRow = [];
+
+        for (var column = 0; column <= secondText.length; column++) {
+            previousRow[column] = column;
+        }
+
+        for (var row = 1; row <= firstText.length; row++) {
+            var currentRow = [row];
+
+            for (var column = 1; column <= secondText.length; column++) {
+                var substitutionCost = firstText[row - 1] === secondText[column - 1] ? 0 : 1;
+                currentRow[column] = Math.min(
+                    currentRow[column - 1] + 1,
+                    previousRow[column] + 1,
+                    previousRow[column - 1] + substitutionCost
+                );
+            }
+
+            previousRow = currentRow;
+        }
+
+        return previousRow[secondText.length];
+    }
+
+    function getMedicineMatchScore(searchText, medicine) {
+        var normalizedSearch = normalizeSearchText(searchText);
+        var normalizedMedicine = normalizeSearchText(medicine);
+
+        if (!normalizedSearch) {
+            return 1;
+        }
+
+        if (productIdentity(searchText) === productIdentity(medicine)) {
+            return 1;
+        }
+
+        if (normalizedMedicine.includes(normalizedSearch)) {
+            return 1;
+        }
+
+        var distance = levenshteinDistance(normalizedSearch, normalizedMedicine);
+        var fullMatchScore = 1 - distance / Math.max(normalizedSearch.length, normalizedMedicine.length);
+        var wordMatchScore = 0;
+        var medicineWords = medicine.toLowerCase().split(/[^a-z0-9]+/);
+
+        medicineWords.forEach(function(word) {
+            if (word) {
+                var normalizedWord = normalizeSearchText(word);
+                var wordDistance = levenshteinDistance(normalizedSearch, normalizedWord);
+                wordMatchScore = Math.max(
+                    wordMatchScore,
+                    1 - wordDistance / Math.max(normalizedSearch.length, normalizedWord.length)
+                );
+            }
+        });
+
+        return Math.max(fullMatchScore, wordMatchScore);
+    }
+
+    function getDistanceInKilometers(firstLatitude, firstLongitude, secondLatitude, secondLongitude) {
+        var earthRadius = 6371;
+        var latitudeDifference = (secondLatitude - firstLatitude) * Math.PI / 180;
+        var longitudeDifference = (secondLongitude - firstLongitude) * Math.PI / 180;
+        var firstLatitudeRadians = firstLatitude * Math.PI / 180;
+        var secondLatitudeRadians = secondLatitude * Math.PI / 180;
+        var haversine = Math.sin(latitudeDifference / 2) * Math.sin(latitudeDifference / 2) +
+            Math.cos(firstLatitudeRadians) * Math.cos(secondLatitudeRadians) *
+            Math.sin(longitudeDifference / 2) * Math.sin(longitudeDifference / 2);
+
+        return earthRadius * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+    }
+
+    function getDirectionsUrl(pharmacy) {
+        return "#";
+    }
+
+    function updateUserLocation(position) {
+        userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+
+        if (userMarker) {
+            map.removeLayer(userMarker);
+        }
+
+        if (userAccuracyCircle) {
+            map.removeLayer(userAccuracyCircle);
+        }
+
+        userMarker = L.marker([userLocation.lat, userLocation.lng])
+            .addTo(map)
+            .bindPopup("You are here");
+        userAccuracyCircle = L.circle([userLocation.lat, userLocation.lng], {
+            radius: position.coords.accuracy,
+            color: "#2563eb",
+            fillColor: "#60a5fa",
+            fillOpacity: 0.2
+        }).addTo(map);
+
+        map.setView([userLocation.lat, userLocation.lng], 14);
+        document.getElementById("locationStatus").textContent =
+            "Your location is active. Distances and directions are ready.";
+        searchMedicine();
+
+        if (pendingRoutePharmacy) {
+            var pharmacyForRoute = pendingRoutePharmacy;
+            pendingRoutePharmacy = null;
+            routeToPharmacy(pharmacyForRoute);
+        }
+    }
+
+    function handleLocationError(error) {
+        if (userWatchId !== null) {
+            navigator.geolocation.clearWatch(userWatchId);
+        }
+        userWatchId = null;
+        var message = error.code === 1
+            ? "Location permission was denied. You can enable it in your browser settings."
+            : error.code === 2
+                ? "Your location is unavailable. Check your device location settings and try again."
+                : error.code === 3
+                    ? "Location request timed out. Please try again."
+                    : "We could not get your location. Please try again.";
+
+        document.getElementById("locationStatus").textContent = message;
+    }
+
+    function locateUser() {
+        if (!navigator.geolocation) {
+            document.getElementById("locationStatus").textContent =
+                "Geolocation is not supported by this browser.";
+            return;
+        }
+
+        document.getElementById("locationStatus").textContent = "Requesting your location...";
+        if (userWatchId !== null) {
+            document.getElementById("locationStatus").textContent =
+                "Your location is already being tracked.";
+            return;
+        }
+
+        userWatchId = navigator.geolocation.watchPosition(updateUserLocation, handleLocationError, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+        });
+    }
 
     function searchMedicine() {
 
@@ -185,13 +1486,55 @@
 
         // Search database
 
-        var found = pharmacies.filter(function(pharmacy) {
-
-            return pharmacy.medicine
-                .toLowerCase()
-                .includes(search);
-
+        var hasDirectMatch = pharmacies.some(function(pharmacy) {
+            return getMedicineMatchScore(search, pharmacy.medicine) === 1;
         });
+
+        var found = pharmacies
+            .map(function(pharmacy, index) {
+                return {
+                    pharmacy: pharmacy,
+                    score: getMedicineMatchScore(search, pharmacy.medicine),
+                    index: index
+                };
+            })
+            .filter(function(result) {
+                return !search || (hasDirectMatch ? result.score === 1 : result.score >= 0.45);
+            })
+            .sort(function(firstResult, secondResult) {
+                return secondResult.score - firstResult.score || firstResult.index - secondResult.index;
+            })
+            .map(function(result) {
+                return result.pharmacy;
+            });
+
+        var seenProductKeys = {};
+        found = found.filter(function(pharmacy) {
+            var productKey = normalizeSearchText(pharmacy.name) + "|" + productIdentity(pharmacy.medicine);
+
+            if (seenProductKeys[productKey]) {
+                return false;
+            }
+
+            seenProductKeys[productKey] = true;
+            return true;
+        });
+
+        if (userLocation) {
+            found.sort(function(firstPharmacy, secondPharmacy) {
+                return getDistanceInKilometers(
+                    userLocation.lat,
+                    userLocation.lng,
+                    firstPharmacy.lat,
+                    firstPharmacy.lng
+                ) - getDistanceInKilometers(
+                    userLocation.lat,
+                    userLocation.lng,
+                    secondPharmacy.lat,
+                    secondPharmacy.lng
+                );
+            });
+        }
 
 
         // No results
@@ -208,66 +1551,88 @@
 
         // Display results
 
+        var pharmaciesFound = {};
+
+        found.forEach(function(pharmacy) {
+            pharmaciesFound[pharmacy.name] = true;
+        });
+
+        var pharmacyCount = Object.keys(pharmaciesFound).length;
+        var productLabel = found.length === 1 ? "product" : "products";
+        var pharmacyLabel = pharmacyCount === 1 ? "pharmacy" : "pharmacies";
+
         document.getElementById("results").innerHTML =
-            "<h3>Found " + found.length +
-            " pharmacies</h3>";
+            "<h3>Found " + found.length + " " + productLabel +
+            " across " + pharmacyCount + " " + pharmacyLabel + "</h3>";
 
 
         found.forEach(function(pharmacy) {
 
+            var details = medicineDetails[pharmacy.medicine];
+            var showDetails = document.getElementById("showDetails").checked;
+            var detailsText = showDetails && details
+                ? "<br>🏷️ Brand: " + details.brand + "<br>⚖️ Dosage: " + details.dosage
+                : "";
+            var description = pharmacy.description || medicineDescriptions[pharmacy.medicine];
+            var descriptionText = showDetails && description
+                ? "<br>📝 " + description
+                : "";
+            var priceText = pharmacy.priceLabel || "₱" + pharmacy.price.toFixed(2);
+            var distanceText = userLocation
+                ? "<br>📍 " + getDistanceInKilometers(
+                    userLocation.lat,
+                    userLocation.lng,
+                    pharmacy.lat,
+                    pharmacy.lng
+                ).toFixed(2) + " km away"
+                : "";
 
-            // Create result card
-
-            var card =
-                document.createElement("div");
-
+            var card = document.createElement("div");
             card.className = "pharmacy";
 
-
-            card.innerHTML =
-
+            var cardContent =
                 "<b>" + pharmacy.name + "</b><br>" +
-
+                "📍 " + pharmacy.address + "<br>" +
                 "💊 " + pharmacy.medicine + "<br>" +
+                detailsText +
+                descriptionText +
+                "<br>💰 " + priceText + "<br>" +
+                "📦 Stock: " + pharmacy.stock +
+                distanceText;
 
-                "💰 ₱" + pharmacy.price.toFixed(2) + "<br>" +
+            card.innerHTML = cardContent;
 
-                "📦 Stock: " + pharmacy.stock;
+            var routeButton = document.createElement("button");
+            routeButton.type = "button";
+            routeButton.className = "route-btn";
+            routeButton.textContent = "Show route on map";
+            routeButton.addEventListener("click", function() {
+                routeToPharmacy(pharmacy);
+            });
+            card.appendChild(routeButton);
 
-
-            document
-                .getElementById("results")
-                .appendChild(card);
-
-
-            // Create map marker
+            document.getElementById("results").appendChild(card);
 
             var marker = L.marker([
-
                 pharmacy.lat,
                 pharmacy.lng
-
             ]).addTo(map);
 
-
             marker.bindPopup(
-
                 "<b>" + pharmacy.name + "</b><br>" +
-
+                "📍 " + pharmacy.address + "<br>" +
                 "💊 " + pharmacy.medicine + "<br>" +
-
-                "💰 ₱" +
-                pharmacy.price.toFixed(2) +
-
-                "<br>📦 Stock: " +
-
-                pharmacy.stock
-
+                detailsText +
+                descriptionText +
+                "<br>💰 " + priceText +
+                "<br>📦 Stock: " + pharmacy.stock + distanceText
             );
 
+            marker.on("click", function() {
+                routeToPharmacy(pharmacy);
+            });
 
             markers.push(marker);
-
 
         });
 
