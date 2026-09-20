@@ -1445,6 +1445,12 @@
             return;
         }
 
+        if (!window.isSecureContext && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+            document.getElementById("locationStatus").textContent =
+                "Location tracking requires HTTPS. Open this app through GitHub Pages, not the GitHub file preview.";
+            return;
+        }
+
         document.getElementById("locationStatus").textContent = "Requesting your location...";
         if (userWatchId !== null) {
             document.getElementById("locationStatus").textContent =
@@ -1455,7 +1461,7 @@
         userWatchId = navigator.geolocation.watchPosition(updateUserLocation, handleLocationError, {
             enableHighAccuracy: true,
             timeout: 10000,
-            maximumAge: 60000
+            maximumAge: 0
         });
     }
 
