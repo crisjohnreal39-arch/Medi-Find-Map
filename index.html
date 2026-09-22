@@ -44,6 +44,13 @@
             margin: 0 0 8px;
         }
 
+        .role-logo {
+            display: block;
+            width: min(100%, 260px);
+            height: auto;
+            margin: 0 auto 18px;
+        }
+
         .role-card p {
             margin: 0 0 22px;
             color: #64748b;
@@ -68,6 +75,26 @@
 
         #roleChooser[hidden] {
             display: none;
+        }
+
+        #modeSwitcher {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1500;
+            display: none;
+            padding: 9px 14px;
+            background: #ffffff;
+            border-color: #0f766e;
+            color: #0f766e;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+        }
+
+        body.user-mode #modeSwitcher,
+        body.pharmacy-mode #modeSwitcher {
+            display: block;
         }
 
         body.user-mode .portal-toggle,
@@ -95,6 +122,13 @@
 
         h1 {
             margin: 0 0 15px;
+        }
+
+        .brand-logo {
+            display: block;
+            width: min(100%, 180px);
+            height: auto;
+            margin: 0 auto 15px;
         }
 
         #search {
@@ -153,23 +187,12 @@
             margin: 20px 0;
         }
 
-        .portal-tab.is-active {
-            background: #0f766e;
-            border-color: #0f766e;
-            color: #ffffff;
-        }
-
-        .portal-form {
-            display: grid;
-            gap: 12px;
-        }
-
-        .portal-form label {
-            display: grid;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #475569;
+        .portal-recover-link {
+            padding: 0;
+            border: 0;
+            color: #0f766e;
+            font-size: 14px;
+            text-decoration: underline;
         }
 
         .portal-form input,
@@ -181,6 +204,16 @@
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             background: #ffffff;
+        }
+
+        .location-fields label {
+            min-width: 0;
+        }
+
+        .location-action {
+            justify-self: start;
+            padding: 9px 12px;
+            font-size: 14px;
         }
 
         .portal-submit,
@@ -199,6 +232,12 @@
 
         .portal-message.is-success {
             color: #0f766e;
+        }
+
+        @media (max-width: 600px) {
+            .location-fields {
+                grid-template-columns: 1fr;
+            }
         }
 
         .portal-dashboard {
@@ -253,6 +292,105 @@
             border-radius: 6px;
             background: #ffffff;
         }
+        .inventory-actions {
+            display: grid;
+            grid-template-columns: minmax(180px, 2fr) minmax(110px, 1fr) minmax(110px, 1fr) auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 18px;
+            padding: 14px;
+            border: 1px solid #dbe3ec;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .inventory-actions label {
+            display: grid;
+            gap: 6px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .inventory-actions input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .add-medicine-btn {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .delete-pharmacy-btn {
+            margin-top: 18px;
+            border-color: #b42318;
+            color: #b42318;
+        }
+
+        .subscription-panel,
+        .premium-report {
+            margin-bottom: 18px;
+            padding: 14px;
+            border: 1px solid #dbe3ec;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .subscription-panel h3,
+        .premium-report h3 {
+            margin: 0 0 6px;
+        }
+
+        .subscription-panel p,
+        .premium-report p {
+            margin: 0 0 12px;
+        }
+
+        .subscription-panel select {
+            width: 100%;
+            max-width: 360px;
+            box-sizing: border-box;
+            padding: 11px;
+            font-size: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        .plan-limit {
+            margin-top: 10px !important;
+            color: #0f766e;
+            font-weight: bold;
+        }
+
+        .premium-report {
+            background: #f0fdfa;
+            border-color: #99f6e4;
+        }
+
+        .statistics-list {
+            display: grid;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .statistics-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 9px 10px;
+            border-radius: 6px;
+            background: #ffffff;
+        }
 
         #inventoryList {
             display: grid;
@@ -274,6 +412,10 @@
             background: #f8fafc;
         }
 
+        .inventory-item > div:first-child {
+            min-width: 0;
+        }
+
         .inventory-item strong {
             display: block;
             margin-bottom: 4px;
@@ -293,12 +435,58 @@
             text-align: right;
         }
 
+        .stock-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        .stock-controls button {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .stock-label {
+            display: block;
+            width: 100%;
+            margin-bottom: 5px;
+            color: #475569;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
         .dashboard-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
             margin-top: 18px;
+        }
+
+        .save-stock-btn {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-heading,
+            .dashboard-footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .inventory-item {
+                align-items: flex-start;
+            }
         }
 
         #stockSaveStatus {
@@ -425,6 +613,9 @@
             .dashboard-controls {
                 grid-template-columns: 1fr;
             }
+            .inventory-actions {
+                grid-template-columns: 1fr;
+            }
 
             .dashboard-controls input,
             .portal-form input,
@@ -513,6 +704,7 @@
 
 <section id="roleChooser" aria-labelledby="roleTitle">
     <div class="role-card">
+        <img class="role-logo" src="medifind-logo.svg" alt="Medi-Find">
         <h2 id="roleTitle">Welcome to MediFind</h2>
         <p>Choose how you want to use the map.</p>
         <div class="role-options">
@@ -522,9 +714,11 @@
     </div>
 </section>
 
+<button type="button" id="modeSwitcher" onclick="switchRole()">Switch to pharmacy view</button>
+
 <header>
 
-    <h1>🏥 MediFind</h1>
+    <img class="brand-logo" src="medifind-logo.svg" alt="Medi-Find">
 
     <input
         type="text"
@@ -556,10 +750,11 @@
 <section id="pharmacyPortal" aria-labelledby="portalTitle">
     <div id="portalAuth" class="portal-auth">
         <h2 id="portalTitle">Pharmacy portal</h2>
-        <p class="inventory-meta">Create an account for your pharmacy or log in to update its public stock.</p>
+        <p class="inventory-meta">Log in or manage your pharmacy account.</p>
         <div class="portal-tabs" role="tablist">
             <button type="button" class="portal-tab is-active" id="loginTab" onclick="showPortalForm('login')">Log in</button>
             <button type="button" class="portal-tab" id="registerTab" onclick="showPortalForm('register')">Create account</button>
+            <button type="button" class="portal-tab" id="recoverTab" onclick="showPortalForm('recover')">Reset password</button>
         </div>
 
         <form id="loginForm" class="portal-form" onsubmit="loginPharmacy(event)">
@@ -568,8 +763,23 @@
             <button type="submit" class="portal-submit">Log in to stock manager</button>
         </form>
 
+        <form id="recoverForm" class="portal-form" onsubmit="recoverPharmacyPassword(event)" hidden>
+            <p class="inventory-meta">Enter your pharmacy account email and choose a new password.</p>
+            <label>Email address<input type="email" id="recoverEmail" required autocomplete="email"></label>
+            <label>New password<input type="password" id="recoverPassword" minlength="6" required autocomplete="new-password"></label>
+            <label>Confirm new password<input type="password" id="recoverPasswordConfirm" minlength="6" required autocomplete="new-password"></label>
+            <button type="submit" class="portal-submit">Reset password</button>
+            <button type="button" class="portal-recover-link" onclick="showPortalForm('login')">Back to log in</button>
+        </form>
+
         <form id="registerForm" class="portal-form" onsubmit="portalRegisterAccount(event)" hidden>
-            <label>Pharmacy<select id="registerPharmacy" required></select></label>
+            <label>Pharmacy name<input type="text" id="registerPharmacyName" required autocomplete="organization" placeholder="Your pharmacy name"></label>
+            <label>Pharmacy address<input type="text" id="registerPharmacyAddress" required autocomplete="street-address" placeholder="Street, barangay, city"></label>
+            <div class="location-fields">
+                <label>Latitude<input type="number" id="registerPharmacyLat" required step="any" min="-90" max="90" placeholder="14.5995"></label>
+                <label>Longitude<input type="number" id="registerPharmacyLng" required step="any" min="-180" max="180" placeholder="120.9842"></label>
+            </div>
+            <button type="button" class="location-action" onclick="usePharmacyLocation()">Use current location</button>
             <label>Email address<input type="email" id="registerEmail" required autocomplete="email"></label>
             <label>Password<input type="password" id="registerPassword" minlength="6" required autocomplete="new-password"></label>
             <button type="submit" class="portal-submit">Create pharmacy account</button>
@@ -580,23 +790,45 @@
     <div id="portalDashboard" class="portal-dashboard" aria-labelledby="dashboardTitle">
         <div class="dashboard-heading">
             <div>
-                <h2 id="dashboardTitle">Update pharmacy stock</h2>
+                <h2 id="dashboardTitle">Your inventory</h2>
                 <p id="loggedInPharmacy" class="inventory-meta"></p>
             </div>
             <button type="button" class="portal-logout" onclick="logoutPharmacy()">Log out</button>
         </div>
+        <div class="subscription-panel">
+            <h3>Your plan</h3>
+            <p id="planDescription" class="inventory-meta">Choose a plan to unlock more pharmacy tools.</p>
+            <select id="subscriptionPlan" aria-label="Subscription plan" onchange="changeSubscriptionPlan()">
+                <option value="basic">Basic - up to 50 added medicines</option>
+                <option value="premium">Premium - up to 150 added medicines</option>
+                <option value="premiumPlus">Premium++ - unlimited medicines and statistics</option>
+            </select>
+            <p id="planLimit" class="plan-limit"></p>
+        </div>
         <div class="dashboard-controls">
             <label>
-                Find a product
-                <input type="search" id="inventorySearch" placeholder="Search inventory..." oninput="renderInventory()">
+                Search products
+                <input type="search" id="inventorySearch" placeholder="Type a product name" oninput="renderInventory()">
             </label>
             <p class="inventory-meta" id="inventoryCount" aria-live="polite"></p>
         </div>
+        <form class="inventory-actions" onsubmit="addMedicine(event)">
+            <label>Medicine or product name<input type="text" id="newMedicineName" required placeholder="e.g. Paracetamol"></label>
+            <label>Price<input type="number" id="newMedicinePrice" required min="0" step="0.01" placeholder="0.00"></label>
+            <label>Starting stock<input type="number" id="newMedicineStock" required min="0" step="1" value="0"></label>
+            <button type="submit" class="add-medicine-btn">Add medicine</button>
+        </form>
+        <section id="premiumReport" class="premium-report" hidden>
+            <h3>Popular medicine searches</h3>
+            <p class="inventory-meta">Search trends from users of this MediFind browser.</p>
+            <ol id="statisticsList" class="statistics-list"></ol>
+        </section>
         <div id="inventoryList"></div>
         <div class="dashboard-footer">
             <span id="stockSaveStatus" role="status"></span>
-            <button type="button" class="save-stock-btn" onclick="saveStockUpdates()">Save stock updates</button>
+            <button type="button" class="save-stock-btn" onclick="saveStockUpdates()">Save changes</button>
         </div>
+        <button type="button" class="delete-pharmacy-btn" onclick="deletePharmacyAccount()">Delete pharmacy account</button>
     </div>
 </section>
 
@@ -817,7 +1049,6 @@
         { name: "Surgical Basics Triangular Bandage", price: 45.00, description: "A versatile piece of cloth shaped like a right-angled triangle." },
         { name: "Top Care Breast Pump", price: 68.00, description: "A simple, hand-operated medical and baby care device used by nursing mothers to express breast milk, relieve painful milk engorgement, and ease overly full breasts." },
         { name: "Diagnostic Vessel", price: 120.00, description: "Used for collecting and handling diagnostic samples during medical testing and examination." },
-        { name: "Simplex Syringe", price: 40.00, description: "Single-use medical syringe designed for safe and precise medication delivery or fluid extraction." },
         { name: "Breast Reliever", price: 75.00, description: "Comfort aid for nursing mothers to ease breast discomfort and improve milk flow." },
         { name: "Skin-Flex Band-Aid", price: 29.00, description: "Flexible adhesive bandage for minor cuts, scratches, and skin protection." },
         { name: "Latex Surgical Gloves", price: 55.00, description: "Protective disposable gloves used in clinical and surgical procedures for hygiene and safety." },
@@ -954,7 +1185,7 @@
                     medicine: product.name,
                     price: product.price,
                     priceLabel: product.priceLabel,
-                    stock: "Available",
+                    stock: 0,
                     description: product.description,
                     address: location.address,
                     lat: location.lat,
@@ -969,6 +1200,7 @@
     deduplicateProducts();
 
     var stockStorageKey = "medifind-stock-updates";
+    var searchStatisticsKey = "medifind-search-statistics";
     var pendingStockUpdates = {};
 
     try {
@@ -987,6 +1219,7 @@
 
     var accountStorageKey = "medifind-pharmacy-accounts";
     var sessionStorageKey = "medifind-pharmacy-session";
+    var originalAccountsSeededKey = "medifind-original-accounts-seeded";
     var currentPharmacyAccount = null;
 
     function getPharmacyAccounts() {
@@ -1001,38 +1234,173 @@
         localStorage.setItem(accountStorageKey, JSON.stringify(accounts));
     }
 
+    function getPlanLimit(plan) {
+        return plan === "premiumPlus" ? Infinity : plan === "premium" ? 150 : 50;
+    }
+
+    function getPlanLabel(plan) {
+        return plan === "premiumPlus" ? "Premium++" : plan === "premium" ? "Premium" : "Basic";
+    }
+
+    function saveCurrentPharmacyAccount() {
+        var accounts = getPharmacyAccounts().map(function(account) {
+            return account.pharmacyName === currentPharmacyAccount.pharmacyName
+                ? currentPharmacyAccount
+                : account;
+        });
+        savePharmacyAccounts(accounts);
+    }
+
+    function ensureOriginalPharmacyAccounts() {
+        var planByPharmacy = {
+            "JOJO'S BOTIKA": "premium",
+            "JESSICA'S DRUGSTORE": "premiumPlus",
+            "MANG BEN'S PHARMACY": "basic"
+        };
+
+        if (localStorage.getItem(originalAccountsSeededKey) === "true") {
+            var existingAccounts = getPharmacyAccounts();
+            existingAccounts.forEach(function(account) {
+                if (planByPharmacy[account.pharmacyName]) {
+                    account.subscriptionPlan = planByPharmacy[account.pharmacyName];
+                }
+            });
+            savePharmacyAccounts(existingAccounts);
+            return;
+        }
+
+        var accounts = getPharmacyAccounts();
+        var originalAccounts = [
+            { pharmacyName: "JOJO'S BOTIKA", password: "Jojo123", subscriptionPlan: "premium" },
+            { pharmacyName: "JESSICA'S DRUGSTORE", password: "Jessica123", subscriptionPlan: "premiumPlus" },
+            { pharmacyName: "MANG BEN'S PHARMACY", password: "Ben123", subscriptionPlan: "basic" }
+        ];
+        var accountEmail = "crisjohnreal39@gmail.com";
+
+        originalAccounts.forEach(function(originalAccount) {
+            var location = pharmacyLocations[originalAccount.pharmacyName];
+            var existingAccount = accounts.find(function(account) {
+                return account.pharmacyName === originalAccount.pharmacyName;
+            });
+
+            if (existingAccount) {
+                existingAccount.email = accountEmail;
+                existingAccount.password = originalAccount.password;
+                existingAccount.subscriptionPlan = originalAccount.subscriptionPlan;
+                existingAccount.customProducts = existingAccount.customProducts || [];
+                return;
+            }
+
+            accounts.push({
+                pharmacyName: originalAccount.pharmacyName,
+                address: location.address,
+                lat: location.lat,
+                lng: location.lng,
+                email: accountEmail,
+                password: originalAccount.password,
+                subscriptionPlan: originalAccount.subscriptionPlan,
+                customProducts: []
+            });
+        });
+
+        savePharmacyAccounts(accounts);
+        localStorage.setItem(originalAccountsSeededKey, "true");
+    }
+
+    ensureOriginalPharmacyAccounts();
+
+    function addCustomPharmacyToDatabase(account) {
+        account.customProducts = account.customProducts || [];
+        var hasCatalogRecords = pharmacies.some(function(pharmacy) {
+            return pharmacy.customAccountEmail === account.email;
+        });
+
+        if (!pharmacyLocations[account.pharmacyName] && !hasCatalogRecords) {
+            additionalSupplyProducts.concat(additionalMedicineProducts).forEach(function(product) {
+                pharmacies.push({
+                    name: account.pharmacyName,
+                    medicine: product.name,
+                    price: product.price,
+                    priceLabel: product.priceLabel,
+                    stock: 0,
+                    description: product.description,
+                    address: account.address,
+                    lat: account.lat,
+                    lng: account.lng,
+                    customAccountEmail: account.email
+                });
+            });
+        }
+
+        account.customProducts.forEach(function(product) {
+            var productAlreadyAdded = pharmacies.some(function(pharmacy) {
+                return pharmacy.customAccountEmail === account.email &&
+                    pharmacy.medicine === product.name &&
+                    pharmacy.customProduct === true;
+            });
+
+            if (!productAlreadyAdded) {
+                pharmacies.push({
+                    name: account.pharmacyName,
+                    medicine: product.name,
+                    price: product.price,
+                    stock: product.stock,
+                    description: product.description || "",
+                    address: account.address,
+                    lat: account.lat,
+                    lng: account.lng,
+                    customAccountEmail: account.email,
+                    customProduct: true
+                });
+            }
+        });
+    }
+
+    getPharmacyAccounts().forEach(function(account) {
+        if (account.address && account.lat !== undefined && account.lng !== undefined) {
+            addCustomPharmacyToDatabase(account);
+        }
+    });
+
     function setPortalMessage(message, isSuccess) {
         var portalMessage = document.getElementById("portalMessage");
         portalMessage.textContent = message;
         portalMessage.classList.toggle("is-success", Boolean(isSuccess));
     }
 
-    function populateRegistrationPharmacies() {
-        var pharmacySelect = document.getElementById("registerPharmacy");
-
-        if (pharmacySelect.options.length) {
+    function usePharmacyLocation() {
+        if (!navigator.geolocation) {
+            setPortalMessage("Location is not supported by this browser. Enter the coordinates manually.", false);
             return;
         }
 
-        pharmacyNames.forEach(function(pharmacyName) {
-            var option = document.createElement("option");
-            option.value = pharmacyName;
-            option.textContent = pharmacyName;
-            pharmacySelect.appendChild(option);
-        });
+        setPortalMessage("Requesting your pharmacy location...", false);
+        navigator.geolocation.getCurrentPosition(function(position) {
+            document.getElementById("registerPharmacyLat").value = position.coords.latitude.toFixed(6);
+            document.getElementById("registerPharmacyLng").value = position.coords.longitude.toFixed(6);
+            setPortalMessage("Pharmacy location captured.", true);
+        }, function() {
+            setPortalMessage("We could not get the location. Enter the coordinates manually.", false);
+        }, { enableHighAccuracy: true, timeout: 10000 });
     }
 
     function chooseRole(role) {
         document.body.classList.remove("user-mode", "pharmacy-mode");
         document.body.classList.add(role === "pharmacy" ? "pharmacy-mode" : "user-mode");
         document.getElementById("roleChooser").hidden = true;
+        document.getElementById("modeSwitcher").textContent = role === "pharmacy"
+            ? "Switch to user view"
+            : "Switch to pharmacy view";
 
         if (role === "pharmacy") {
             var portal = document.getElementById("pharmacyPortal");
             portal.classList.add("is-visible");
-            populateRegistrationPharmacies();
             restorePharmacySession();
         }
+    }
+
+    function switchRole() {
+        chooseRole(document.body.classList.contains("pharmacy-mode") ? "user" : "pharmacy");
     }
 
     function togglePharmacyPortal() {
@@ -1042,25 +1410,31 @@
         portal.classList.toggle("is-visible", shouldShow);
 
         if (shouldShow) {
-            populateRegistrationPharmacies();
             restorePharmacySession();
         }
     }
 
     function showPortalForm(formName) {
         var isLogin = formName === "login";
+        var isRegister = formName === "register";
+        var isRecover = formName === "recover";
 
         document.getElementById("loginForm").hidden = !isLogin;
-        document.getElementById("registerForm").hidden = isLogin;
+        document.getElementById("registerForm").hidden = !isRegister;
+        document.getElementById("recoverForm").hidden = !isRecover;
         document.getElementById("loginTab").classList.toggle("is-active", isLogin);
-        document.getElementById("registerTab").classList.toggle("is-active", !isLogin);
+        document.getElementById("registerTab").classList.toggle("is-active", isRegister);
+        document.getElementById("recoverTab").classList.toggle("is-active", isRecover);
         setPortalMessage("", false);
     }
 
     function portalRegisterAccount(event) {
         event.preventDefault();
 
-        var pharmacyName = document.getElementById("registerPharmacy").value;
+        var pharmacyName = document.getElementById("registerPharmacyName").value.trim();
+        var address = document.getElementById("registerPharmacyAddress").value.trim();
+        var latitude = Number(document.getElementById("registerPharmacyLat").value);
+        var longitude = Number(document.getElementById("registerPharmacyLng").value);
         var email = document.getElementById("registerEmail").value.trim().toLowerCase();
         var password = document.getElementById("registerPassword").value;
         var accounts = getPharmacyAccounts();
@@ -1070,13 +1444,26 @@
             return;
         }
 
-        if (accounts.some(function(account) { return account.pharmacyName === pharmacyName; })) {
+        if (accounts.some(function(account) {
+            return account.pharmacyName.toLowerCase() === pharmacyName.toLowerCase();
+        })) {
             setPortalMessage("This pharmacy already has an account. Please log in.", false);
             return;
         }
 
-        accounts.push({ pharmacyName: pharmacyName, email: email, password: password });
+        var account = {
+            pharmacyName: pharmacyName,
+            address: address,
+            lat: latitude,
+            lng: longitude,
+            email: email,
+            password: password,
+            customProducts: [],
+            subscriptionPlan: "basic"
+        };
+        accounts.push(account);
         savePharmacyAccounts(accounts);
+        addCustomPharmacyToDatabase(account);
         document.getElementById("registerForm").reset();
         showPortalForm("login");
         document.getElementById("loginEmail").value = email;
@@ -1093,13 +1480,45 @@
         });
 
         if (!account) {
-            setPortalMessage("Email or password is incorrect.", false);
+            var emailExists = getPharmacyAccounts().some(function(savedAccount) {
+                return savedAccount.email === email;
+            });
+            setPortalMessage(emailExists ? "Incorrect password." : "No pharmacy account was found for that email.", false);
             return;
         }
 
         currentPharmacyAccount = account;
         localStorage.setItem(sessionStorageKey, email);
         showPortalDashboard();
+    }
+
+    function recoverPharmacyPassword(event) {
+        event.preventDefault();
+
+        var email = document.getElementById("recoverEmail").value.trim().toLowerCase();
+        var newPassword = document.getElementById("recoverPassword").value;
+        var confirmedPassword = document.getElementById("recoverPasswordConfirm").value;
+        var accounts = getPharmacyAccounts();
+        var account = accounts.find(function(savedAccount) {
+            return savedAccount.email === email;
+        });
+
+        if (!account) {
+            setPortalMessage("No pharmacy account was found for that email.", false);
+            return;
+        }
+
+        if (newPassword !== confirmedPassword) {
+            setPortalMessage("The passwords do not match.", false);
+            return;
+        }
+
+        account.password = newPassword;
+        savePharmacyAccounts(accounts);
+        document.getElementById("recoverForm").reset();
+        showPortalForm("login");
+        document.getElementById("loginEmail").value = email;
+        setPortalMessage("Password reset. You can now log in.", true);
     }
 
     function restorePharmacySession() {
@@ -1121,10 +1540,154 @@
     function showPortalDashboard() {
         document.getElementById("portalAuth").style.display = "none";
         document.getElementById("portalDashboard").classList.add("is-visible");
+        currentPharmacyAccount.subscriptionPlan = currentPharmacyAccount.subscriptionPlan || "basic";
+        currentPharmacyAccount.customProducts = currentPharmacyAccount.customProducts || [];
         document.getElementById("loggedInPharmacy").textContent =
             currentPharmacyAccount.pharmacyName + " | " + currentPharmacyAccount.email;
         document.getElementById("inventorySearch").value = "";
+        document.getElementById("subscriptionPlan").value = currentPharmacyAccount.subscriptionPlan;
+        renderSubscriptionDetails();
         renderInventory();
+    }
+
+    function changeSubscriptionPlan() {
+        if (pharmacyLocations[currentPharmacyAccount.pharmacyName]) {
+            return;
+        }
+
+        currentPharmacyAccount.subscriptionPlan = document.getElementById("subscriptionPlan").value;
+        saveCurrentPharmacyAccount();
+        renderSubscriptionDetails();
+    }
+
+    function renderSubscriptionDetails() {
+        var plan = currentPharmacyAccount.subscriptionPlan || "basic";
+        var limit = getPlanLimit(plan);
+        var addedCount = (currentPharmacyAccount.customProducts || []).length;
+        var limitText = limit === Infinity ? "Unlimited added medicines" : addedCount + " of " + limit + " added medicines used";
+
+        document.getElementById("planLimit").textContent = getPlanLabel(plan) + " plan: " + limitText;
+        var originalPharmacy = Boolean(pharmacyLocations[currentPharmacyAccount.pharmacyName]);
+        document.getElementById("subscriptionPlan").hidden = originalPharmacy;
+        document.getElementById("planDescription").textContent = originalPharmacy
+            ? "Your subscription plan is assigned by MediFind."
+            : "Choose a plan to unlock more pharmacy tools.";
+        document.getElementById("premiumReport").hidden = plan !== "premiumPlus";
+
+        if (plan === "premiumPlus") {
+            renderSearchStatistics();
+        }
+    }
+
+    function getSearchStatistics() {
+        try {
+            return JSON.parse(localStorage.getItem(searchStatisticsKey) || "{}");
+        } catch (error) {
+            return {};
+        }
+    }
+
+    function renderSearchStatistics() {
+        var statistics = getSearchStatistics();
+        var popularSearches = Object.keys(statistics)
+            .map(function(key) {
+                return statistics[key];
+            })
+            .sort(function(firstSearch, secondSearch) {
+                return secondSearch.count - firstSearch.count || firstSearch.label.localeCompare(secondSearch.label);
+            })
+            .slice(0, 10);
+        var statisticsList = document.getElementById("statisticsList");
+
+        statisticsList.innerHTML = "";
+
+        if (!popularSearches.length) {
+            statisticsList.innerHTML = "<li>No medicine searches recorded yet.</li>";
+            return;
+        }
+
+        popularSearches.forEach(function(search) {
+            var item = document.createElement("li");
+            item.innerHTML = "<span>" + search.label + "</span><strong>" + search.count + " searches</strong>";
+            statisticsList.appendChild(item);
+        });
+    }
+
+    function changeStock(input, amount) {
+        var nextValue = Math.max(0, Math.floor(Number(input.value) || 0) + amount);
+        input.value = nextValue;
+        input.dispatchEvent(new Event("change"));
+    }
+
+    function addMedicine(event) {
+        event.preventDefault();
+
+        var medicineName = document.getElementById("newMedicineName").value.trim();
+        var price = Number(document.getElementById("newMedicinePrice").value);
+        var stock = Math.max(0, Math.floor(Number(document.getElementById("newMedicineStock").value)));
+        var currentPlan = currentPharmacyAccount.subscriptionPlan || "basic";
+        var medicineLimit = getPlanLimit(currentPlan);
+        var addedMedicineCount = (currentPharmacyAccount.customProducts || []).length;
+
+        if (addedMedicineCount >= medicineLimit) {
+            document.getElementById("stockSaveStatus").textContent =
+                getPlanLabel(currentPlan) + " allows " + medicineLimit + " added medicines. Upgrade your plan to add more.";
+            return;
+        }
+
+        if (!medicineName || !Number.isFinite(price) || !Number.isFinite(stock)) {
+            document.getElementById("stockSaveStatus").textContent = "Enter a name, price, and stock quantity.";
+            return;
+        }
+
+        var duplicate = pharmacies.some(function(pharmacy) {
+            return pharmacy.name === currentPharmacyAccount.pharmacyName &&
+                normalizeSearchText(pharmacy.medicine) === normalizeSearchText(medicineName);
+        });
+
+        if (duplicate) {
+            document.getElementById("stockSaveStatus").textContent = "That medicine is already in your inventory.";
+            return;
+        }
+
+        var product = {
+            name: medicineName,
+            price: price,
+            stock: stock,
+            description: ""
+        };
+        currentPharmacyAccount.customProducts = currentPharmacyAccount.customProducts || [];
+        currentPharmacyAccount.customProducts.push(product);
+        saveCurrentPharmacyAccount();
+        addCustomPharmacyToDatabase(currentPharmacyAccount);
+        document.getElementById("newMedicineName").value = "";
+        document.getElementById("newMedicinePrice").value = "";
+        document.getElementById("newMedicineStock").value = "0";
+        document.getElementById("stockSaveStatus").textContent = medicineName + " was added to your inventory.";
+        renderSubscriptionDetails();
+        renderInventory();
+    }
+
+    function deletePharmacyAccount() {
+        if (!confirm("Delete " + currentPharmacyAccount.pharmacyName + " and its public listings?")) {
+            return;
+        }
+
+        var pharmacyName = currentPharmacyAccount.pharmacyName;
+        var remainingAccounts = getPharmacyAccounts().filter(function(account) {
+            return account.pharmacyName !== pharmacyName;
+        });
+
+        savePharmacyAccounts(remainingAccounts);
+        pharmacies = pharmacies.filter(function(pharmacy) {
+            return pharmacy.name !== pharmacyName;
+        });
+        currentPharmacyAccount = null;
+        localStorage.removeItem(sessionStorageKey);
+        document.getElementById("portalDashboard").classList.remove("is-visible");
+        document.getElementById("portalAuth").style.display = "block";
+        showPortalForm("login");
+        setPortalMessage(pharmacyName + " was deleted.", true);
     }
 
     function logoutPharmacy() {
@@ -1167,6 +1730,14 @@
             productDetails.innerHTML = "<strong>" + pharmacy.medicine + "</strong>" +
                 "<small>Price: " + (pharmacy.priceLabel || "₱" + pharmacy.price.toFixed(2)) + "</small>";
 
+            var stockControls = document.createElement("div");
+            stockControls.className = "stock-controls";
+
+            var decreaseButton = document.createElement("button");
+            decreaseButton.type = "button";
+            decreaseButton.textContent = "−";
+            decreaseButton.setAttribute("aria-label", "Decrease stock for " + pharmacy.medicine);
+
             var stockInput = document.createElement("input");
             stockInput.className = "stock-input";
             stockInput.type = "number";
@@ -1176,8 +1747,25 @@
             stockInput.setAttribute("aria-label", "Stock for " + pharmacy.medicine);
             stockInput.dataset.pharmacyIndex = pharmacyIndex;
 
+            var increaseButton = document.createElement("button");
+            increaseButton.type = "button";
+            increaseButton.textContent = "+";
+            increaseButton.setAttribute("aria-label", "Increase stock for " + pharmacy.medicine);
+
+            decreaseButton.addEventListener("click", function() {
+                changeStock(stockInput, -1);
+            });
+            increaseButton.addEventListener("click", function() {
+                changeStock(stockInput, 1);
+            });
+
+            stockControls.innerHTML = "<span class=\"stock-label\">In stock</span>";
+            stockControls.appendChild(decreaseButton);
+            stockControls.appendChild(stockInput);
+            stockControls.appendChild(increaseButton);
+
             item.appendChild(productDetails);
-            item.appendChild(stockInput);
+            item.appendChild(stockControls);
             inventoryList.appendChild(item);
         });
     }
@@ -1307,6 +1895,29 @@
 
     function normalizeSearchText(text) {
         return text.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+    }
+
+    function getStockLabel(stock) {
+        return Number(stock) === 0 ? "Out of stock" : stock;
+    }
+
+    function recordMedicineSearch(search) {
+        var label = search.trim();
+
+        if (!label) {
+            return;
+        }
+
+        var key = normalizeSearchText(label);
+        var statistics = getSearchStatistics();
+        statistics[key] = statistics[key] || { label: label, count: 0 };
+        statistics[key].count++;
+        statistics[key].label = label;
+        localStorage.setItem(searchStatisticsKey, JSON.stringify(statistics));
+
+        if (currentPharmacyAccount && currentPharmacyAccount.subscriptionPlan === "premiumPlus") {
+            renderSearchStatistics();
+        }
     }
 
     function levenshteinDistance(firstText, secondText) {
@@ -1473,6 +2084,8 @@
             .toLowerCase()
             .trim();
 
+        recordMedicineSearch(search);
+
 
         // Remove previous markers
 
@@ -1603,7 +2216,7 @@
                 detailsText +
                 descriptionText +
                 "<br>💰 " + priceText + "<br>" +
-                "📦 Stock: " + pharmacy.stock +
+                "📦 Stock: " + getStockLabel(pharmacy.stock) +
                 distanceText;
 
             card.innerHTML = cardContent;
@@ -1631,7 +2244,7 @@
                 detailsText +
                 descriptionText +
                 "<br>💰 " + priceText +
-                "<br>📦 Stock: " + pharmacy.stock + distanceText
+                "<br>📦 Stock: " + getStockLabel(pharmacy.stock) + distanceText
             );
 
             marker.on("click", function() {
@@ -1642,6 +2255,10 @@
 
         });
 
+    }
+
+    if (window.location.hash === "#pharmacy") {
+        chooseRole("pharmacy");
     }
 
 </script>
