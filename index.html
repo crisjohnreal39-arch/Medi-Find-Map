@@ -534,89 +534,6 @@
             }
         }
 
-
-        .payment-panel {
-            display: none;
-            margin-top: 14px;
-            padding: 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            background: #f8fafc;
-        }
-
-        .payment-panel.is-visible {
-            display: block;
-        }
-
-        .payment-panel h4 {
-            margin: 0 0 8px;
-            font-size: 18px;
-        }
-
-        .payment-form {
-            display: grid;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .payment-form label {
-            display: grid;
-            gap: 6px;
-            color: #475569;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .payment-form input,
-        .payment-form select {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 11px;
-            font-size: 15px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            background: #ffffff;
-        }
-
-        .payment-method-fields[hidden] {
-            display: none;
-        }
-
-        .payment-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .payment-submit {
-            background: #0f766e;
-            border-color: #0f766e;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .payment-cancel {
-            background: #ffffff;
-        }
-
-        .payment-message {
-            min-height: 20px;
-            margin: 4px 0 0;
-            color: #b42318;
-            font-size: 14px;
-        }
-
-        .payment-message.is-success {
-            color: #0f766e;
-        }
-
-        @media (max-width: 600px) {
-            .payment-actions button {
-                width: 100%;
-                min-height: 48px;
-            }
-        }
-
         #stockSaveStatus {
             color: #0f766e;
             font-size: 14px;
@@ -926,62 +843,12 @@
         <div class="subscription-panel">
             <h3>Your plan</h3>
             <p id="planDescription" class="inventory-meta">Choose a plan to unlock more pharmacy tools.</p>
-            <select id="subscriptionPlan" aria-label="Subscription plan" onchange="subscriptionPlanSelected()">
+            <select id="subscriptionPlan" aria-label="Subscription plan" onchange="changeSubscriptionPlan()">
                 <option value="basic">Basic - up to 50 added medicines</option>
                 <option value="premium">Premium - up to 150 added medicines</option>
                 <option value="premiumPlus">Premium++ - unlimited medicines and statistics</option>
             </select>
             <p id="planLimit" class="plan-limit"></p>
-
-            <div id="subscriptionPaymentPanel" class="payment-panel" aria-live="polite">
-                <h4>Upgrade your subscription</h4>
-                <p class="inventory-meta">Selected plan: <strong id="paymentPlanName">Premium</strong> — <strong id="paymentPlanPrice">₱199.00/month</strong></p>
-                <div class="payment-form">
-                    <label>Payment method
-                        <select id="paymentMethod" onchange="showPaymentFields()">
-                            <option value="gcash">GCash</option>
-                            <option value="maya">Maya</option>
-                            <option value="card">Credit / Debit Card</option>
-                        </select>
-                    </label>
-
-                    <div id="gcashFields" class="payment-method-fields">
-                        <label>GCash mobile number
-                            <input type="tel" id="gcashNumber" inputmode="numeric" placeholder="09XXXXXXXXX" maxlength="11">
-                        </label>
-                    </div>
-
-                    <div id="mayaFields" class="payment-method-fields" hidden>
-                        <label>Maya mobile number
-                            <input type="tel" id="mayaNumber" inputmode="numeric" placeholder="09XXXXXXXXX" maxlength="11">
-                        </label>
-                    </div>
-
-                    <div id="cardFields" class="payment-method-fields" hidden>
-                        <label>Card number
-                            <input type="text" id="cardNumber" inputmode="numeric" autocomplete="off" placeholder="1234 5678 9012 3456" maxlength="19">
-                        </label>
-                        <label>Cardholder name
-                            <input type="text" id="cardName" autocomplete="off" placeholder="Name on card">
-                        </label>
-                        <div class="location-fields">
-                            <label>Expiry
-                                <input type="text" id="cardExpiry" inputmode="numeric" autocomplete="off" placeholder="MM/YY" maxlength="5">
-                            </label>
-                            <label>CVV
-                                <input type="password" id="cardCvv" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4">
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="payment-actions">
-                        <button type="button" class="payment-submit" onclick="processSubscriptionPayment()">Pay and activate plan</button>
-                        <button type="button" class="payment-cancel" onclick="closePaymentPanel()">Cancel</button>
-                    </div>
-                    <p id="paymentMessage" class="payment-message" role="status"></p>
-                    <p class="inventory-meta">Demo payment screen only. It does not charge a real GCash, Maya, or bank card.</p>
-                </div>
-            </div>
         </div>
         <div class="dashboard-controls">
             <label>
@@ -1733,109 +1600,6 @@
         savePharmacyAccounts(getPharmacyAccounts().map(function(account) {
             return account.pharmacyName === currentPharmacyAccount.pharmacyName ? currentPharmacyAccount : account;
         }));
-    }
-
-
-    var subscriptionPrices = {
-        basic: 0,
-        premium: 199,
-        premiumPlus: 399
-    };
-
-    var pendingSubscriptionPlan = null;
-
-    function subscriptionPlanSelected() {
-        if (!currentPharmacyAccount) {
-            return;
-        }
-
-        var selectedPlan = document.getElementById("subscriptionPlan").value;
-
-        if (selectedPlan === "basic") {
-            currentPharmacyAccount.subscriptionPlan = "basic";
-            saveCurrentPharmacyAccount();
-            renderSubscriptionDetails();
-            closePaymentPanel();
-            return;
-        }
-
-        var currentPlan = currentPharmacyAccount.subscriptionPlan || "basic";
-
-        if (selectedPlan === currentPlan) {
-            return;
-        }
-
-        pendingSubscriptionPlan = selectedPlan;
-        document.getElementById("paymentPlanName").textContent = getPlanLabel(selectedPlan);
-        document.getElementById("paymentPlanPrice").textContent = "₱" + subscriptionPrices[selectedPlan].toFixed(2) + "/month";
-        document.getElementById("paymentMessage").textContent = "";
-        document.getElementById("paymentMessage").classList.remove("is-success");
-        document.getElementById("subscriptionPaymentPanel").classList.add("is-visible");
-        showPaymentFields();
-    }
-
-    function showPaymentFields() {
-        var method = document.getElementById("paymentMethod").value;
-        document.getElementById("gcashFields").hidden = method !== "gcash";
-        document.getElementById("mayaFields").hidden = method !== "maya";
-        document.getElementById("cardFields").hidden = method !== "card";
-    }
-
-    function processSubscriptionPayment() {
-        if (!currentPharmacyAccount || !pendingSubscriptionPlan) {
-            return;
-        }
-
-        var method = document.getElementById("paymentMethod").value;
-        var valid = true;
-        var message = "";
-
-        if (method === "gcash" || method === "maya") {
-            var number = document.getElementById(method === "gcash" ? "gcashNumber" : "mayaNumber").value.replace(/\D/g, "");
-            valid = /^09\d{9}$/.test(number);
-            message = "Enter a valid 11-digit " + (method === "gcash" ? "GCash" : "Maya") + " mobile number.";
-        } else {
-            var cardNumber = document.getElementById("cardNumber").value.replace(/\D/g, "");
-            var cardName = document.getElementById("cardName").value.trim();
-            var expiry = document.getElementById("cardExpiry").value.trim();
-            var cvv = document.getElementById("cardCvv").value.replace(/\D/g, "");
-            valid = /^\d{13,19}$/.test(cardNumber) && cardName.length >= 2 && /^\d{2}\/\d{2}$/.test(expiry) && /^\d{3,4}$/.test(cvv);
-            message = "Enter valid card details before continuing.";
-        }
-
-        if (!valid) {
-            showPaymentMessage(message, false);
-            return;
-        }
-
-        currentPharmacyAccount.subscriptionPlan = pendingSubscriptionPlan;
-        currentPharmacyAccount.subscriptionPaymentMethod = method;
-        currentPharmacyAccount.subscriptionUpdatedAt = new Date().toISOString();
-        saveCurrentPharmacyAccount();
-        document.getElementById("subscriptionPlan").value = pendingSubscriptionPlan;
-        renderSubscriptionDetails();
-        showPaymentMessage("Payment approved in demo mode. " + getPlanLabel(pendingSubscriptionPlan) + " is now active.", true);
-
-        setTimeout(function() {
-            closePaymentPanel();
-        }, 700);
-    }
-
-    function showPaymentMessage(message, isSuccess) {
-        var paymentMessage = document.getElementById("paymentMessage");
-        paymentMessage.textContent = message;
-        paymentMessage.classList.toggle("is-success", Boolean(isSuccess));
-    }
-
-    function closePaymentPanel() {
-        var panel = document.getElementById("subscriptionPaymentPanel");
-        if (panel) {
-            panel.classList.remove("is-visible");
-        }
-        pendingSubscriptionPlan = null;
-        if (currentPharmacyAccount) {
-            document.getElementById("subscriptionPlan").value = currentPharmacyAccount.subscriptionPlan || "basic";
-        }
     }
 
     function changeSubscriptionPlan() {
