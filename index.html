@@ -44,6 +44,21 @@
             margin: 0 0 8px;
         }
 
+        .role-logo,
+        .brand-logo {
+            display: block;
+            height: auto;
+            margin: 0 auto 16px;
+        }
+
+        .role-logo {
+            width: min(100%, 260px);
+        }
+
+        .brand-logo {
+            width: min(100%, 180px);
+        }
+
         .role-card p {
             margin: 0 0 22px;
             color: #64748b;
@@ -190,6 +205,10 @@
         .portal-form {
             display: grid;
             gap: 12px;
+        }
+
+        .portal-form[hidden] {
+            display: none;
         }
 
         .portal-form label {
@@ -343,6 +362,79 @@
             margin-top: 18px;
             border-color: #b42318;
             color: #b42318;
+        }
+
+        .subscription-panel {
+            margin-bottom: 18px;
+            padding: 14px;
+            border: 1px solid #dbe3ec;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .subscription-panel h3 {
+            margin: 0 0 6px;
+        }
+
+        .subscription-panel select {
+            width: 100%;
+            max-width: 360px;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .plan-limit {
+            margin: 10px 0 0;
+            color: #0f766e;
+            font-weight: bold;
+        }
+
+        .sales-report {
+            display: none;
+            margin-bottom: 18px;
+            padding: 14px;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            background: #eff6ff;
+        }
+
+        .sales-report.is-visible {
+            display: block;
+        }
+
+        .sales-report h3 {
+            margin: 0 0 6px;
+        }
+
+        .sales-products {
+            display: grid;
+            gap: 8px;
+            margin: 12px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .sales-products li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 9px 10px;
+            background: #ffffff;
+            border-radius: 6px;
+        }
+
+        .sales-summary {
+            display: flex;
+            gap: 24px;
+            margin: 12px 0;
+        }
+
+        .sales-summary strong {
+            color: #172033;
+            font-size: 18px;
         }
 
         #inventoryList {
@@ -657,6 +749,7 @@
 
 <section id="roleChooser" aria-labelledby="roleTitle">
     <div class="role-card">
+        <img class="role-logo" src="medifind-logo.svg" alt="Medi-Find">
         <h2 id="roleTitle">Welcome to MediFind</h2>
         <p>Choose how you want to use the map.</p>
         <div class="role-options">
@@ -670,7 +763,7 @@
 
 <header>
 
-    <h1>🏥 MediFind</h1>
+    <img class="brand-logo" src="medifind-logo.svg" alt="Medi-Find">
 
     <input
         type="text"
@@ -747,6 +840,16 @@
             </div>
             <button type="button" class="portal-logout" onclick="logoutPharmacy()">Log out</button>
         </div>
+        <div class="subscription-panel">
+            <h3>Your plan</h3>
+            <p id="planDescription" class="inventory-meta">Choose a plan to unlock more pharmacy tools.</p>
+            <select id="subscriptionPlan" aria-label="Subscription plan" onchange="changeSubscriptionPlan()">
+                <option value="basic">Basic - up to 50 added medicines</option>
+                <option value="premium">Premium - up to 150 added medicines</option>
+                <option value="premiumPlus">Premium++ - unlimited medicines and statistics</option>
+            </select>
+            <p id="planLimit" class="plan-limit"></p>
+        </div>
         <div class="dashboard-controls">
             <label>
                 Search products
@@ -760,6 +863,24 @@
             <label>Starting stock<input type="number" id="newMedicineStock" required min="0" step="1" value="0"></label>
             <button type="submit" class="add-medicine-btn">Add medicine</button>
         </form>
+        <section id="salesReport" class="sales-report">
+            <h3 id="salesReportTitle">Today's sales report</h3>
+            <p id="salesReportDescription" class="inventory-meta">Summary of stock deducted today and its estimated sales value.</p>
+            <select id="salesPeriod" aria-label="Sales report period" onchange="renderSalesReport()">
+                <option value="day">Today</option>
+                <option value="month">This month</option>
+            </select>
+            <div class="sales-summary">
+                <strong id="salesUnits">0 units</strong>
+                <strong id="salesRevenue">₱0.00</strong>
+            </div>
+            <ul id="salesProducts" class="sales-products"></ul>
+        </section>
+        <section id="searchStatisticsReport" class="sales-report">
+            <h3>Most searched medicines</h3>
+            <p class="inventory-meta">Searches recorded by MediFind users.</p>
+            <ul id="searchStatisticsList" class="sales-products"></ul>
+        </section>
         <div id="inventoryList"></div>
         <div class="dashboard-footer">
             <span id="stockSaveStatus" role="status"></span>
@@ -1137,6 +1258,8 @@
     deduplicateProducts();
 
     var stockStorageKey = "medifind-stock-updates";
+    var salesActivityKey = "medifind-sales-activity";
+    var searchStatisticsKey = "medifind-search-statistics";
     var pendingStockUpdates = {};
 
     try {
@@ -1171,15 +1294,28 @@
     }
 
     function ensureOriginalPharmacyAccounts() {
+        var planByPharmacy = {
+            "JOJO'S BOTIKA": "premium",
+            "JESSICA'S DRUGSTORE": "premiumPlus",
+            "MANG BEN'S PHARMACY": "basic"
+        };
+
         if (localStorage.getItem(originalAccountsSeededKey) === "true") {
+            var existingAccounts = getPharmacyAccounts();
+            existingAccounts.forEach(function(account) {
+                if (planByPharmacy[account.pharmacyName]) {
+                    account.subscriptionPlan = planByPharmacy[account.pharmacyName];
+                }
+            });
+            savePharmacyAccounts(existingAccounts);
             return;
         }
 
         var accounts = getPharmacyAccounts();
         var originalAccounts = [
-            { pharmacyName: "JOJO'S BOTIKA", password: "Jojo123" },
-            { pharmacyName: "JESSICA'S DRUGSTORE", password: "Jessica123" },
-            { pharmacyName: "MANG BEN'S PHARMACY", password: "Ben123" }
+            { pharmacyName: "JOJO'S BOTIKA", password: "Jojo123", subscriptionPlan: "premium" },
+            { pharmacyName: "JESSICA'S DRUGSTORE", password: "Jessica123", subscriptionPlan: "premiumPlus" },
+            { pharmacyName: "MANG BEN'S PHARMACY", password: "Ben123", subscriptionPlan: "basic" }
         ];
         var accountEmail = "crisjohnreal39@gmail.com";
 
@@ -1192,6 +1328,7 @@
             if (existingAccount) {
                 existingAccount.email = accountEmail;
                 existingAccount.password = originalAccount.password;
+                existingAccount.subscriptionPlan = originalAccount.subscriptionPlan;
                 return;
             }
 
@@ -1201,7 +1338,8 @@
                 lat: location.lat,
                 lng: location.lng,
                 email: accountEmail,
-                password: originalAccount.password
+                password: originalAccount.password,
+                subscriptionPlan: originalAccount.subscriptionPlan
             });
         });
 
@@ -1358,7 +1496,8 @@
             lng: longitude,
             email: email,
             password: password,
-            customProducts: []
+            customProducts: [],
+            subscriptionPlan: "basic"
         };
         accounts.push(account);
         savePharmacyAccounts(accounts);
@@ -1439,10 +1578,136 @@
     function showPortalDashboard() {
         document.getElementById("portalAuth").style.display = "none";
         document.getElementById("portalDashboard").classList.add("is-visible");
+        currentPharmacyAccount.subscriptionPlan = currentPharmacyAccount.subscriptionPlan || "basic";
         document.getElementById("loggedInPharmacy").textContent =
             currentPharmacyAccount.pharmacyName + " | " + currentPharmacyAccount.email;
         document.getElementById("inventorySearch").value = "";
+        document.getElementById("subscriptionPlan").value = currentPharmacyAccount.subscriptionPlan;
+        renderSubscriptionDetails();
+        renderSalesReport();
         renderInventory();
+    }
+
+    function getPlanLimit(plan) {
+        return plan === "premiumPlus" ? Infinity : plan === "premium" ? 150 : 50;
+    }
+
+    function getPlanLabel(plan) {
+        return plan === "premiumPlus" ? "Premium++" : plan === "premium" ? "Premium" : "Basic";
+    }
+
+    function saveCurrentPharmacyAccount() {
+        savePharmacyAccounts(getPharmacyAccounts().map(function(account) {
+            return account.pharmacyName === currentPharmacyAccount.pharmacyName ? currentPharmacyAccount : account;
+        }));
+    }
+
+    function changeSubscriptionPlan() {
+        if (pharmacyLocations[currentPharmacyAccount.pharmacyName]) {
+            return;
+        }
+
+        currentPharmacyAccount.subscriptionPlan = document.getElementById("subscriptionPlan").value;
+        saveCurrentPharmacyAccount();
+        renderSubscriptionDetails();
+    }
+
+    function renderSubscriptionDetails() {
+        var plan = currentPharmacyAccount.subscriptionPlan || "basic";
+        var originalPharmacy = Boolean(pharmacyLocations[currentPharmacyAccount.pharmacyName]);
+        var addedCount = (currentPharmacyAccount.customProducts || []).length;
+        var limit = getPlanLimit(plan);
+        var limitText = limit === Infinity ? "Unlimited added medicines" : addedCount + " of " + limit + " added medicines used";
+
+        document.getElementById("subscriptionPlan").hidden = originalPharmacy;
+        document.getElementById("planDescription").textContent = originalPharmacy
+            ? "Your subscription plan is assigned by MediFind."
+            : "Choose a plan to unlock more pharmacy tools.";
+        document.getElementById("planLimit").textContent = getPlanLabel(plan) + " plan: " + limitText;
+    }
+
+    function getSalesActivity() {
+        try {
+            return JSON.parse(localStorage.getItem(salesActivityKey) || "{}");
+        } catch (error) {
+            return {};
+        }
+    }
+
+    function getTodayKey() {
+        var today = new Date();
+        return today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+    }
+
+    function recordStockDeduction(pharmacy, quantity) {
+        if (quantity <= 0) {
+            return;
+        }
+
+        var activity = getSalesActivity();
+        var accountKey = normalizeSearchText(currentPharmacyAccount.pharmacyName);
+        var todayKey = getTodayKey();
+        activity[accountKey] = activity[accountKey] || {};
+        activity[accountKey][todayKey] = activity[accountKey][todayKey] || {};
+        var dailyActivity = activity[accountKey][todayKey];
+        dailyActivity[pharmacy.medicine] = (dailyActivity[pharmacy.medicine] || 0) + quantity;
+        localStorage.setItem(salesActivityKey, JSON.stringify(activity));
+    }
+
+    function renderSalesReport() {
+        var report = document.getElementById("salesReport");
+        var isPremiumPlus = currentPharmacyAccount.subscriptionPlan === "premiumPlus";
+        var isPremiumOrHigher = currentPharmacyAccount.subscriptionPlan === "premium" || isPremiumPlus;
+        report.classList.toggle("is-visible", isPremiumOrHigher);
+
+        if (!isPremiumOrHigher) {
+            return;
+        }
+
+        var activity = getSalesActivity();
+        var accountKey = normalizeSearchText(currentPharmacyAccount.pharmacyName);
+        var dailyActivity = activity[accountKey] && activity[accountKey][getTodayKey()];
+        var salesUnits = 0;
+        var salesRevenue = 0;
+        var salesProducts = document.getElementById("salesProducts");
+        salesProducts.innerHTML = "";
+
+        if (!dailyActivity || !Object.keys(dailyActivity).length) {
+            document.getElementById("salesUnits").textContent = "0 units";
+            document.getElementById("salesRevenue").textContent = "₱0.00";
+            salesProducts.innerHTML = isPremiumPlus ? "<li>No products deducted today.</li>" : "";
+        } else {
+            Object.keys(dailyActivity).forEach(function(medicineName) {
+                var quantity = dailyActivity[medicineName];
+                var product = pharmacies.find(function(pharmacy) {
+                    return pharmacy.name === currentPharmacyAccount.pharmacyName && pharmacy.medicine === medicineName;
+                });
+                salesUnits += quantity;
+                salesRevenue += quantity * (product ? Number(product.price) || 0 : 0);
+            });
+
+            if (isPremiumPlus) {
+                Object.keys(dailyActivity).sort().forEach(function(medicineName) {
+                    var quantity = dailyActivity[medicineName];
+                    var product = pharmacies.find(function(pharmacy) {
+                        return pharmacy.name === currentPharmacyAccount.pharmacyName && pharmacy.medicine === medicineName;
+                    });
+                    var value = quantity * (product ? Number(product.price) || 0 : 0);
+                    var item = document.createElement("li");
+                    item.innerHTML = "<span>" + medicineName + " x" + quantity + "</span><strong>₱" + value.toFixed(2) + "</strong>";
+                    salesProducts.appendChild(item);
+                });
+            }
+        }
+
+        document.getElementById("salesUnits").textContent = salesUnits + " units";
+        document.getElementById("salesRevenue").textContent = "₱" + salesRevenue.toFixed(2);
+        document.getElementById("salesReportTitle").textContent = isPremiumPlus
+            ? "Today's products sold"
+            : "Today's sales summary";
+        document.getElementById("salesReportDescription").textContent = isPremiumPlus
+            ? "Products deducted from stock today and their estimated sales value."
+            : "Total stock deducted today and its estimated sales value.";
     }
 
     function changeStock(input, amount) {
@@ -1457,6 +1722,15 @@
         var medicineName = document.getElementById("newMedicineName").value.trim();
         var price = Number(document.getElementById("newMedicinePrice").value);
         var stock = Math.max(0, Math.floor(Number(document.getElementById("newMedicineStock").value)));
+        var plan = currentPharmacyAccount.subscriptionPlan || "basic";
+        var limit = getPlanLimit(plan);
+        var addedCount = (currentPharmacyAccount.customProducts || []).length;
+
+        if (addedCount >= limit) {
+            document.getElementById("stockSaveStatus").textContent =
+                getPlanLabel(plan) + " allows " + limit + " added medicines. Upgrade your plan to add more.";
+            return;
+        }
 
         if (!medicineName || !Number.isFinite(price) || !Number.isFinite(stock)) {
             document.getElementById("stockSaveStatus").textContent = "Enter a name, price, and stock quantity.";
@@ -1481,16 +1755,13 @@
         };
         currentPharmacyAccount.customProducts = currentPharmacyAccount.customProducts || [];
         currentPharmacyAccount.customProducts.push(product);
-        savePharmacyAccounts(getPharmacyAccounts().map(function(account) {
-            return account.pharmacyName === currentPharmacyAccount.pharmacyName
-                ? currentPharmacyAccount
-                : account;
-        }));
+        saveCurrentPharmacyAccount();
         addCustomPharmacyToDatabase(currentPharmacyAccount);
         document.getElementById("newMedicineName").value = "";
         document.getElementById("newMedicinePrice").value = "";
         document.getElementById("newMedicineStock").value = "0";
         document.getElementById("stockSaveStatus").textContent = medicineName + " was added to your inventory.";
+        renderSubscriptionDetails();
         renderInventory();
     }
 
@@ -1602,8 +1873,10 @@
         var updatedCount = 0;
 
         stockInputs.forEach(function(input) {
-            var stockValue = Math.max(0, Math.floor(Number(input.value)));
             var pharmacyIndex = Number(input.dataset.pharmacyIndex);
+            var pharmacy = pharmacies[pharmacyIndex];
+            var previousStock = Number(pharmacy.stock);
+            var stockValue = Math.max(0, Math.floor(Number(input.value)));
 
             if (!Number.isFinite(stockValue)) {
                 stockValue = 0;
@@ -1611,6 +1884,7 @@
 
             pharmacies[pharmacyIndex].stock = stockValue;
             pendingStockUpdates[pharmacyIndex] = stockValue;
+            recordStockDeduction(pharmacy, Math.max(0, previousStock - stockValue));
             input.value = stockValue;
             updatedCount++;
         });
@@ -1619,6 +1893,7 @@
         document.getElementById("stockSaveStatus").textContent =
             updatedCount + " stock " + (updatedCount === 1 ? "item" : "items") +
             " saved for " + selectedPharmacy + ".";
+        renderSalesReport();
         searchMedicine();
     }
 
